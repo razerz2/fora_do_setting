@@ -12,7 +12,8 @@
         <!-- Formulario -->
         <div class="col-xl-10 col-lg-8">
             <div class="card shadow mb-4">
-                <form id="userForm" action="{{ route('Pacientes.update', ['Paciente' => $paciente->id_paciente]) }}" method="post" enctype="multipart/form-data">
+                <form id="userForm" action="{{ route('Pacientes.update', ['Paciente' => $paciente->id_paciente]) }}"
+                    method="post" enctype="multipart/form-data">
                     @csrf
                     {{ method_field('PUT') }}
                     <!-- Card Header - Dropdown -->
@@ -34,7 +35,8 @@
                                     <label for="exampleInputImagem">Foto do Paciente:</label>
                                     <div class="text-center">
                                         <div id="imageContainer" class="rounded" style="width: 150px; height: 150px;">
-                                            <img id="exampleInputImagem" src="{{ asset('storage/images/pacientes/pct' . $paciente->id_paciente . '.jpg') }}"
+                                            <img id="exampleInputImagem"
+                                                src="{{ asset('storage/images/pacientes/pct' . $paciente->id_paciente . '.jpg') }}"
                                                 style="width: 150px; height: 150px;">
                                         </div>
                                     </div>
@@ -57,7 +59,7 @@
                             <div class="col-md-5">
                                 <div class="form-check">
                                     <input id="CheckResp" class="form-check-input" type="checkbox"
-                                        onchange="exibeFormResp()">
+                                        onchange="exibeFormResp()" @if ($paciente->resp_tel_1) checked @endif>
                                     <label class="form-check-label" for="CheckResp">
                                         Responsável
                                     </label>
@@ -65,8 +67,9 @@
                                 <div class="form-group">
                                     <label for="exampleInputNomePaciente">Nome do Paciente:</label>
                                     <input type="text" class="form-control form-control-user"
-                                        id="exampleInputNomePaciente" value="{{ old('nome_paciente', $paciente->nome_paciente) }}"
-                                        name="nome_paciente" aria-describedby="nameHelp" placeholder="Nome Completo..." required>
+                                        id="exampleInputNomePaciente"
+                                        value="{{ old('nome_paciente', $paciente->nome_paciente) }}" name="nome_paciente"
+                                        aria-describedby="nameHelp" placeholder="Nome Completo..." required>
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputRG">RG:</label>
@@ -91,7 +94,8 @@
                                         <div class="form-group">
                                             <label for="exampleInputDataNascimento">Data de Nascimento:</label>
                                             <input type="date" class="form-control form-control-user"
-                                                id="exampleInputDataNascimento" value="{{ old('data_nascimento', $paciente->data_nascimento) }}"
+                                                id="exampleInputDataNascimento"
+                                                value="{{ old('data_nascimento', $paciente->data_nascimento) }}"
                                                 name="data_nascimento" aria-describedby="emailDataNascimento"
                                                 placeholder="Informe sua data de nascimento..." required>
                                         </div>
@@ -100,16 +104,19 @@
                                         <div class="form-group">
                                             <label for="exampleInputIdade">idade:</label>
                                             <input id="inputIdade"type="text" class="form-control form-control-user"
-                                                id="exampleInputEmail" value="{{ old('idade', $paciente->idade) }}" name="idade"
-                                                aria-describedby="idadeHelp" readonly>
+                                                id="exampleInputEmail" value="{{ old('idade', $paciente->idade) }}"
+                                                name="idade" aria-describedby="idadeHelp" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="exampleInputSexo">Sexo:</label>
-                                            <select id="exampleInputSexo" name="sexo" class="form-control form-control-user" required>
-                                                <option value="F" {{ $paciente->sexo === 'F' ? 'selected' : '' }}>Feminino</option>
-                                                <option value="M" {{ $paciente->sexo === 'M' ? 'selected' : '' }}>Masculino</option>
+                                            <select id="exampleInputSexo" name="sexo"
+                                                class="form-control form-control-user" required>
+                                                <option value="F" {{ $paciente->sexo === 'F' ? 'selected' : '' }}>
+                                                    Feminino</option>
+                                                <option value="M" {{ $paciente->sexo === 'M' ? 'selected' : '' }}>
+                                                    Masculino</option>
                                             </select>
                                         </div>
                                     </div>
@@ -119,8 +126,8 @@
                                 <div class="form-group">
                                     <label for="exampleInputName">Email:</label>
                                     <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        value="{{ old('email', $paciente->email) }}" name="email" aria-describedby="emailHelp"
-                                        placeholder="Digite seu E-mail..." required>
+                                        value="{{ old('email', $paciente->email) }}" name="email"
+                                        aria-describedby="emailHelp" placeholder="Digite seu E-mail..." required>
                                 </div>
                             </div>
                         </div>
@@ -129,8 +136,9 @@
                                 <div class="form-group">
                                     <label for="exampleInputTelefone1">Telefone 1:</label>
                                     <input type="text" class="form-control form-control-user"
-                                        id="exampleInputTelefone1" value="{{ old('telefone_1', $paciente->telefone_1) }}" name="telefone_1"
-                                        aria-describedby="Telefone1Help" placeholder="Digite o nº do seu telefone..." required>
+                                        id="exampleInputTelefone1" value="{{ old('telefone_1', $paciente->telefone_1) }}"
+                                        name="telefone_1" aria-describedby="Telefone1Help"
+                                        placeholder="Digite o nº do seu telefone..." required>
                                 </div>
                             </div>
                             <div class="col-md-5">
@@ -143,13 +151,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="formResp" class="row align-items-center justify-content-center" hidden>
+                        <div id="formResp" class="row align-items-center justify-content-center" @if (!$paciente->resp_tel_1) hidden @endif>
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="exampleInputRespTelefone1">Nome do Responsável do telefone:</label>
                                     <input type="text" class="form-control form-control-user"
-                                        id="exampleInputRespTelefone1" value="{{ old('resp_tel_1') }}" name="resp_tel_1"
-                                        aria-describedby="Telefone1Help"
+                                        id="exampleInputRespTelefone1" value="{{ old('resp_tel_1', $paciente->resp_tel_1) }}"
+                                        name="resp_tel_1" aria-describedby="Telefone1Help"
                                         placeholder="Digite o nome do responsável pelo telefone...">
                                 </div>
                             </div>
@@ -158,7 +166,7 @@
                                     <label for="exampleInputRespTelefone2">Nome do responsável do telefone 2:</label>
                                     <input type="text" class="form-control form-control-user"
                                         id="exampleInputRespTelefone2" aria-describedby="Telefone2Help"
-                                        value="{{ old('resp_tel_2') }}" name="resp_tel_2"
+                                        value="{{ old('resp_tel_2', $paciente->resp_tel_2) }}" name="resp_tel_2"
                                         placeholder="Digite o nome do responsável pelo segundo telefone...">
                                 </div>
                             </div>

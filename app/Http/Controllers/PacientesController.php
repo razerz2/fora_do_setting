@@ -89,7 +89,9 @@ class PacientesController extends Controller
      */
     public function show($id)
     {
-        $paciente = Paciente::with('endereco.cidade', 'endereco.estado')->find($id);
+        $paciente = Paciente::with('enderecoP.pais', 'enderecoP.estado', 'enderecoP.cidade')->find($id);
+
+        //dd($paciente);
         
         return view('pacientes.show', compact('paciente'));
     }
