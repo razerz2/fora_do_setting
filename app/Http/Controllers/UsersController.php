@@ -72,7 +72,7 @@ class UsersController extends Controller
         $this->salvaImagemPerfil($image, $recovery->id);
         $this->registraPermissoes($permissoes, $recovery->id);
 
-        return redirect()->route('users.index');
+        return redirect()->route('Users.index');
         
     }
 
@@ -126,7 +126,7 @@ class UsersController extends Controller
         $this->deletePermissoes($id);
         $this->registraPermissoes($permissoes, $id);
 
-        return redirect()->route('users.index');
+        return redirect()->route('Users.index');
 
     }
 
@@ -175,7 +175,7 @@ class UsersController extends Controller
         $usuario->fill($data);
         $usuario->save();
 
-        return redirect()->route('users.index');
+        return redirect()->route('Users.index');
     }
 
     public function desativar(Request $request)
@@ -190,7 +190,7 @@ class UsersController extends Controller
         $usuario->fill($data);
         $usuario->save();
 
-        return redirect()->route('users.index');
+        return redirect()->route('Users.index');
     }
 
     public function ativar(Request $request)
@@ -205,7 +205,7 @@ class UsersController extends Controller
         $usuario->fill($data);
         $usuario->save();
 
-        return redirect()->route('users.index');
+        return redirect()->route('Users.index');
     }
 
     public function salvaImagemPerfil($image, $id_user)
