@@ -227,7 +227,7 @@ class AgendamentoController extends Controller
         //dd($calendario);
 
         // Passar as variáveis para a view
-        return view('Agenda.agendamento', compact('dias_semana', 'periodos', 'calendario'));
+        return view('agenda.agendamento', compact('dias_semana', 'periodos', 'calendario'));
     }
 
     public function getAgendamento($id)
