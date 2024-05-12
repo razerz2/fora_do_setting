@@ -46,11 +46,11 @@
                     <tbody>
                         @foreach ($pacientes as $paciente)
                             <tr class="text-center">
-                                <td>{{ $paciente->id_paciente }}</td>
-                                <td>{{ $paciente->nome_paciente }}</td>
-                                <td>{{ formatarCPF($paciente->cpf) }}</td>
-                                <td>{{ $paciente->email }}</td>
-                                <td>{{ $paciente->status }}</td>
+                                <td class="text-center"><small>{{ $paciente->id_paciente }}</small></td>
+                                <td class="text-center"><small>{{ $paciente->nome_paciente }}</small></td>
+                                <td class="text-center"><small>{{ formatarCPF($paciente->cpf) }}</small></td>
+                                <td class="text-center"><small>{{ $paciente->email }}</small></td>
+                                <td class="text-center"><small>{{ $paciente->status }}</small></td>
                                 <td align="center">
                                     <a href="{{ route('Pacientes.verificaEnderecoPaciente', ['paciente' => $paciente->id_paciente]) }}"
                                         class="btn btn-secondary btn-sm"> <i class="fa fa-map"></i> Endereço </a>
@@ -125,5 +125,5 @@
             </div>
         </div>
     </div>
-    <script src="{{ asset('js/pacientes/listar.js') }}"></script>
+    <script src="{{ asset('js/pacientes/index.js') }}"></script>
 @endsection

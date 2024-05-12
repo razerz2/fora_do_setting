@@ -14,7 +14,6 @@
         <div class="col-xl-10 col-lg-8">
             <div class="card shadow mb-4">
                 <form>
-                    @csrf
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
                         <h6 class="m-0 font-weight-bold text-secondary text-center">Informações do Paciente</h6>
@@ -210,7 +209,41 @@
                                     </div>
                                 </div>
                             </div>
+                            <br>
+                            <div class="row align-items-center justify-content-center">
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <button  type="button" data-toggle="modal" data-target="#delete-endereco" class="btn btn-danger"><i class="fa fa-trash"></i>
+                                            Excluír Endereço</button>
+                                    </div>
+                                </div>
+                            </div>
                         @endif
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal modal-danger fade" id="delete-endereco" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header align-items-center">
+                    <h4 class="modal-title text-center" id="myModalLabel">Deseja Excluir?</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <form action="{{ route('PacientesEndereco.destroy', $paciente->id_paciente) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div class="modal-body">
+                        <p class="text-center">
+                            Tem certeza de que deseja excluír o endereço do paciente '{{$paciente->nome_paciente}}'?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Excluír</button>
                     </div>
                 </form>
             </div>

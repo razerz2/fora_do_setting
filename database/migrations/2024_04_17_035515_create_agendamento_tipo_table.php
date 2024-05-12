@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMotivoInativacaoTable extends Migration
+class CreateAgendamentoTipoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateMotivoInativacaoTable extends Migration
      */
     public function up()
     {
-        Schema::create('motivo_inativacao', function (Blueprint $table) {
-            $table->bigIncrements('id_mi');
-            $table->string('nome_mi');
-            $table->string('descricao_mi');
+        Schema::create('agendamento_tipo', function (Blueprint $table) {
+            $table->bigIncrements('id_at');
+            $table->string('tipo_agendamento');
+            $table->string('descricao');
             $table->boolean('registro_sistemico');
         });
     }
@@ -28,6 +28,6 @@ class CreateMotivoInativacaoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('motivo_inativacao');
+        Schema::dropIfExists('agendamento_tipo');
     }
 }

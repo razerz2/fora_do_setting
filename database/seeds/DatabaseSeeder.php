@@ -1,6 +1,5 @@
 <?php
 
-use App\Permissoes;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,5 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PaisesTableSeeder::class);
         $this->call(EstadosTableSeeder::class);
         $this->call(CidadesTableSeeder::class);
+        $this->call(MotivoInativacaoTableSeeder::class);
+        $this->call(AgendamentoPeriodoTableSeeder::class);
+        $this->call(AgendamentoTipoTableSeeder::class);
     }
 }

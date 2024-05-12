@@ -35,10 +35,20 @@
         @if (in_array('agenda', $permissoes))
             <!-- Nav Item - Agenda -->
             <li class="nav-item">
-                <a class="nav-link" href="charts.html">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo0"
+                    aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-regular fa-calendar"></i>
-                    <span>Agenda</span></a>
+                    <span>Agenda</span>
+                </a>
+                <div id="collapseTwo0" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{{ route('Agendamento.agenda') }}">Calendário</a>
+                        <a class="collapse-item" href="{{ route('Agendamento.create') }}">Criar Horário</a>
+                        <a class="collapse-item" href="{{ route('Agendamento.index') }}">Agendamentos</a>
+                    </div>
+                </div>
             </li>
+
         @endif
 
         @if (in_array('pacientes', $permissoes))

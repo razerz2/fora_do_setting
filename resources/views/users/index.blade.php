@@ -23,10 +23,10 @@
                     <tbody>
                         @foreach ($usuarios as $usuario)
                             <tr>
-                                <td>{{ $usuario->id }}</td>
-                                <td>{{ $usuario->name }}</td>
-                                <td>{{ $usuario->email }}</td>
-                                <td>{{ $usuario->status }}</td>
+                                <td class="text-center"><small>{{ $usuario->id }}</small></td>
+                                <td class="text-center"><small>{{ $usuario->name }}</small></td>
+                                <td class="text-center"><small>{{ $usuario->email }}</small></td>
+                                <td class="text-center"><small>{{ $usuario->status }}</small></td>
                                 <td align="center">
                                     <a href="{{ route('Users.edit', ['usuario' => $usuario->id]) }}"
                                         class="btn btn-secondary btn-sm"> <i class="fa fa-edit"></i> Editar </a>
@@ -101,5 +101,5 @@
             </div>
         </div>
     </div>
-    <script src="{{ asset('js/users/listar.js') }}"></script>
+    <script src="{{ asset('js/users/index.js') }}"></script>
 @endsection

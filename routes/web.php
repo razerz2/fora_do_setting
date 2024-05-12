@@ -11,6 +11,8 @@
 |
 */
 
+use App\Agendamento;
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -39,6 +41,15 @@ Route::middleware('auth')->group(function () {
     Route::get('getEstados/{pais_id}', 'PacientesEnderecoController@getEstados')->name('PacientesEndereco.getEstados');
     Route::get('getCidades/{estado_id}', 'PacientesEnderecoController@getCidades')->name('PacientesEndereco.getCidades');
     Route::get('/PacientesEndereco/verifica_endereco/{id}', 'PacientesEnderecoController@verificaEnderecoPaciente')->name('Pacientes.verificaEnderecoPaciente');
-
+  
+    Route::resource('Agendamento', AgendamentoController::class)->except('agenda');
+    Route::get('/Agendamentos/Calendario', 'AgendamentoController@agenda')->name('Agendamento.agenda');
+    Route::post('/Agendamentos/Excluir/', 'AgendamentoController@agendamentoExcluir')->name('Agendamento.excluir');
+    Route::post('/Agendamentos/Marcar/', 'AgendamentoController@agendamentoRedirecionador')->name('Agendamento.redirecionador');
+    Route::post('/Agendamentos/Desmarcar/', 'AgendamentoController@agendamentoDesmarcar')->name('Agendamento.desmarcar');
+    Route::post('/Agendamentos/StorePaciente/', 'AgendamentoController@storeAgendamentoPaciente')->name('Agendamento.storePaciente');
+    Route::post('/Agendamentos/StoreReservado/', 'AgendamentoController@storeAgendamentoReservado')->name('Agendamento.storeReservado');
+    Route::get('getAgendamento/{id}', 'AgendamentoController@getAgendamento')->name('Agendamentos.getAgendamento');
+    
     // Adcionar mais rotas aqui, no decorrer do projeto...
 });

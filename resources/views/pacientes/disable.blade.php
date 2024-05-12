@@ -93,7 +93,7 @@
                 <div class="row align-items-center justify-content-center text-center">
                     <div class="col-md-10">
                         <div class="form-group">
-                            <a href="{{ route('home') }}" class="btn btn-secondary btn-sm"><i class="fas fa-ban"></i>
+                            <a href="{{ route('Pacientes.index') }}" class="btn btn-secondary btn-sm"><i class="fas fa-ban"></i>
                                 Cancelar</a>
                             <button type="submit" class="btn btn-dark btn-sm"><i class="fas fa-save"></i>
                                 Salvar</button>
