@@ -72,7 +72,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <form id="marcarForm" action="" method="POST">
+                <form id="marcarForm" action="{{ route('Agendamento.redirecionador') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <p class="text-center">
@@ -112,7 +112,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <form id="desmarcarForm" action="" method="POST">
+                <form id="desmarcarForm" action="{{ route('Agendamento.redirecionador') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <p class="text-center">
@@ -137,7 +137,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <form id="desativarForm" action="" method="POST">
+                <form id="desativarForm" action="{{ route('Agendamento.excluir') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <p class="text-center">

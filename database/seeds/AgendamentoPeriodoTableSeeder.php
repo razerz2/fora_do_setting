@@ -17,22 +17,22 @@ class AgendamentoPeriodoTableSeeder extends Seeder
         [
             'id_ap' => 1,
             'periodo' => 'Manhã',
-            'hora_inicial' => '07:00',
-            'hora_final' => '13:00',
+            'hora_inicial' => '06:59',
+            'hora_final' => '12:59',
             'registro_sistemico' => true,
         ],
         [
             'id_ap' => 2,
             'periodo' => 'Tarde',
             'hora_inicial' => '13:00',
-            'hora_final' => '19:00',
+            'hora_final' => '18:59',
             'registro_sistemico' => true,
         ],
         [
             'id_ap' => 3,
             'periodo' => 'Noite',
             'hora_inicial' => '19:00',
-            'hora_final' => '22:00',
+            'hora_final' => '21:59',
             'registro_sistemico' => true,
         ]
         // Adicione mais registros conforme necessário
