@@ -22,7 +22,12 @@ function carregarDetalhesAgendamento(id) {
                 '<p>Período: ' + agendamento.agendamento_periodo.periodo + '</p>' +
                 '<p>Horário Inicial: ' + formatarHorario(agendamento.horario_inicial) + 'hrs </p>' +
                 '<p>Horário Final: ' + formatarHorario(agendamento.horario_final) + 'hrs </p>';
-
+                
+            if( agendamento.at_id == 1 && agendamentoDetalhes.length > 0)  {
+                html += '<p>Modalidade: ' + (agendamentoDetalhes[0].presencial ? 'Presencial' : 'Online') + '</p>';
+            }else if(agendamento.at_id == 3 && agendamentoDetalhes.length > 0){
+                html += '<p>Modalidade: ' + (agendamentoDetalhes[0].presencial ? 'Presencial' : 'Online') + '</p>';
+            }
             // Insira o HTML na div modal
             document.getElementById('modal_n_ag').innerHTML = agendamento.id_agendamento;
             document.getElementById('agendaDetalhes').innerHTML = html;

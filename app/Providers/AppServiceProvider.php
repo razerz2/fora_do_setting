@@ -13,7 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->commands([
+            'App\Console\Commands\VerificarAgendamentosDiarios',
+        ]);
     }
 
     /**

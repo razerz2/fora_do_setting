@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800"> Agendamentos \ <span class="h6 mb-0 text-gray-800"> Agendamento Reservado </span>
+        <h1 class="h3 mb-0 text-gray-800"> Agendamentos \ <span class="h6 mb-0 text-gray-800"> Reagendar </span>
         </h1>
     </div>
 
@@ -13,8 +13,10 @@
         <!-- Formulario -->
         <div class="col-xl-10 col-lg-8">
             <div class="card shadow mb-4">
-                <form action="{{ route('Agendamento.storeReservado') }}" method="post">
+                <form action="{{ route('Agendamento.storeReagendarReserva') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="id_agendamento" value="{{ $agendamento->id_agendamento }}">
+                    <input type="hidden" name="descricao" value="{{ $agendamento->agendamentoReservado->descricao }}">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
                         <h6 class="m-0 font-weight-bold text-secondary text-center">Reservado</h6>
@@ -31,32 +33,31 @@
                         <div class="row align-items-center justify-content-center">
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <input type="hidden" name="at_id" value="{{ $tipo_agendamento }}">
                                     <label for="text01">Nº Agendamento:</label>
                                     <input type="text" class="form-control form-control-user" id="text01"
                                         value="{{ $agendamento->id_agendamento }}" name="agendamento_id"
-                                        aria-describedby="AgendamentoHelp" readonly>
+                                        aria-describedby="AgendamentoHelp" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="text02">Descrição:</label>
+                                    <input type="text" class="form-control form-control-user" id="text02"
+                                        value="{{ $agendamento->agendamentoReservado->descricao }}"
+                                        aria-describedby="PeriodoHelp" disabled>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="text02">Período:</label>
-                                    <input type="text" class="form-control form-control-user" id="text02"
-                                        value="{{ $agendamento->agendamentoPeriodo->periodo }}"
-                                        aria-describedby="PeriodoHelp" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
                                     <label for="text03">Dia da Semana:</label>
                                     <input type="text" class="form-control form-control-user" id="text03"
                                         value="{{ $agendamento->dia }}" 
-                                        aria-describedby="DiaHelp" readonly>
+                                        aria-describedby="DiaHelp" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="text04">Horários:</label>
+                                    <label for="text04">Horário:</label>
                                     <input type="text" class="form-control form-control-user" id="text04"
                                         value="{{substr($agendamento->horario_inicial, 0, 5)}} às {{substr($agendamento->horario_final, 0, 5)}}" 
                                         aria-describedby="HorarioHelp" readonly>
@@ -67,25 +68,30 @@
                         <div class="row align-items-center justify-content-center">
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <label for="text05">Descrição:</label>
-                                    <input type="text" name="descricao" class="form-control form-control-user" id="text05" 
-                                        aria-describedby="DescricaoHelp">
+                                    <label for="list_horarios">Horários Livres:</label>
+                                    <select id="list_horarios" name="agendamento_id" class="form-control form-control-user" required>
+                                        @foreach ($agendamentos_livres as $al)
+                                            <option value="{{ $al->id_agendamento }}" {{ old('agendamento_id') == $al->id_agendamento ? 'selected' : '' }}>
+                                                Nº {{ $al->id_agendamento }}  ;  Dia: {{ $al->dia }}  ;  Horário:  {{substr($al->horario_inicial, 0, 5)}}hrs às {{substr($al->horario_final, 0, 5)}}hrs
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input id="CheckPresencial" class="form-check-input" type="checkbox" name="presencial">
+                                    <input id="CheckPresencial" class="form-check-input" type="checkbox" name="presencial" {{ $agendamento->agendamentoReservado->presencial ? 'checked' : '' }}>
                                     <label class="form-check-label" for="CheckPresencial">
                                         Presencial
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input id="CheckOnline" class="form-check-input" type="checkbox" name="online">
+                                    <input id="CheckOnline" class="form-check-input" type="checkbox" name="online" {{ !$agendamento->agendamentoReservado->presencial ? 'checked' : '' }}>
                                     <label class="form-check-label" for="CheckPresencial">
                                         Online
                                     </label>
                                 </div>
-                            </div>                           
+                            </div>                          
                         </div>
                     </div>
                     <!-- Card Body -->

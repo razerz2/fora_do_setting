@@ -11,6 +11,7 @@ use App\AgendamentoTipo;
 use App\Paciente;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class AgendamentoController extends Controller
 {
@@ -230,6 +231,45 @@ class AgendamentoController extends Controller
         return view('agenda.agendamento', compact('dias_semana', 'periodos', 'calendario'));
     }
 
+    public function agendaPorDia(Request $request)
+{
+    // Definir os dias da semana e períodos
+    $dias_semana = [1 => 'Segunda', 2 => 'Terça', 3 => 'Quarta', 4 => 'Quinta', 5 => 'Sexta', 6 => 'Sábado', 7 => 'Domingo'];
+    $periodos = [1 => 'Manhã', 2 => 'Tarde', 3 => 'Noite'];
+
+    // Recuperar o dia selecionado
+    $data = $request->all();
+    $diaSelecionado = null;        
+    if (array_key_exists('n_dia', $data)) {
+        $diaSelecionado = $data['n_dia'];
+    }else{
+        $diaSelecionado = $this->semanaPadraoSistema();
+    }
+    
+    // Recuperar os agendamentos do banco de dados (supondo que você tenha o modelo Agendamento configurado corretamente)
+    $agendamentos = Agendamento::with([
+        'agendamentoPeriodo', 
+        'agendamentoTipo', 
+        'agendamentoReservado', 
+        'agendamentoPaciente.paciente' // Carregar paciente através de agendamentoPaciente
+    ])->where('n_dia', $diaSelecionado)->get();
+    //dd($agendamentos);
+    // Inicializar um array vazio para armazenar os agendamentos por dia e período
+    $calendario = [];
+
+    // Organizar os agendamentos por dia e período
+    foreach ($periodos as $ap_id => $periodo) {
+        // Filtrar os agendamentos para o período atual
+        $agendamentos_periodo = $agendamentos->where('ap_id', $ap_id);
+
+        // Armazenar os agendamentos no calendário
+        $calendario[$periodo] = $agendamentos_periodo;
+    }
+
+    // Passar as variáveis para a view
+    return view('agenda.agendamento_dia', compact('dias_semana', 'periodos', 'calendario', 'diaSelecionado'));
+}
+
     public function getAgendamento($id)
     {
         $agendamento = Agendamento::with('agendamentoPeriodo.agendamento', 'agendamentoTipo.agendamento')
@@ -309,6 +349,82 @@ class AgendamentoController extends Controller
         }
     }
 
+    public function reagendar(Request $request)
+    {
+        $agendamento = Agendamento::with('agendamentoPeriodo', 'agendamentoTipo', 'agendamentoReservado', 'agendamentoPaciente.paciente')
+        ->where('id_agendamento', $request->id_agendamento)
+        ->first();
+        //dd($agendamento);
+        $tipo_agendamento = $agendamento->at_id;
+        if ($tipo_agendamento  == 1) {
+            $agendamentos_livres = Agendamento::where('at_id', 2)->orderBy('n_dia')->orderBy('ap_id')->orderBy('horario_inicial')->get();
+            return view('agenda.edit_ap', compact('agendamento', 'agendamentos_livres'));
+        } else if ($tipo_agendamento  == 3) {
+            $agendamentos_livres = Agendamento::where('at_id', 2)->orderBy('ap_id')->orderBy('dia')->orderBy('horario_inicial')->get();
+            return view('agenda.edit_ar', compact('agendamento', 'agendamentos_livres'));
+        }
+
+        return redirect()-route('home');
+    }
+
+    public function storeReagendarPaciente(Request $request)
+    {
+        try {
+            $data = $request->all();
+            if (array_key_exists('presencial', $data)) {
+                $data['presencial'] = true;
+            } else if (array_key_exists('online', $data)) {
+                $data['presencial'] = false;
+            }
+            //dd($data);
+            //Primeiro apaga registro antigo do agendamento na tabela Agendamento Paciente...
+            AgendamentoPaciente::where('agendamento_id', $data['id_agendamento'])->delete();
+
+            //Salva os novos registro em agendamento de pacientes
+            AgendamentoPaciente::create($data);
+
+            //Altera status do novo agendamento para pacientes
+            $this->alterarStatusAgendamento($data['agendamento_id'], 1);
+
+            //Altera agendamento antigo para status Livre
+            $this->alterarAgendamentoLivre($data['id_agendamento']);
+
+            return redirect()->route('Agendamento.index');
+        } catch (\Exception $e) {
+            \Log::error('Erro ao registrar Agendamento: ' . $e->getMessage());
+            return redirect()->route('Agendamento.index')->with('error', 'Ocorreu um erro ao salvar o agendamento: ' . $e->getMessage());
+        }
+    }
+
+    public function storeReagendarReserva(Request $request)
+    {
+        try {
+            $data = $request->all();
+            if (array_key_exists('presencial', $data)) {
+                $data['presencial'] = true;
+            } else if (array_key_exists('online', $data)) {
+                $data['presencial'] = false;
+            }
+            //dd($data);
+            //Primeiro apaga registro antigo do agendamento na tabela Agendamento Paciente...
+            AgendamentoReservado::where('agendamento_id', $data['id_agendamento'])->delete();
+
+            //Salva os novos registro em agendamento de pacientes
+            AgendamentoReservado::create($data);
+
+            //Altera status do novo agendamento reservado
+            $this->alterarStatusAgendamento($data['agendamento_id'], 3);
+
+            //Altera agendamento antigo para status Livre
+            $this->alterarAgendamentoLivre($data['id_agendamento']);
+
+            return redirect()->route('Agendamento.index');
+        } catch (\Exception $e) {
+            \Log::error('Erro ao registrar Agendamento: ' . $e->getMessage());
+            return redirect()->route('Agendamento.index')->with('error', 'Ocorreu um erro ao salvar o agendamento: ' . $e->getMessage());
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -319,9 +435,10 @@ class AgendamentoController extends Controller
     {
         try {
             $data = $request->all();
+            
             if (array_key_exists('presencial', $data)) {
                 $data['presencial'] = true;
-            } else {
+            } else if(array_key_exists('online', $data)) {
                 $data['presencial'] = false;
             }
             $this->alterarStatusAgendamento($data['agendamento_id'], $data['at_id']);
@@ -344,9 +461,10 @@ class AgendamentoController extends Controller
     {
         try {
             $data = $request->all();
+            
             if (array_key_exists('presencial', $data)) {
                 $data['presencial'] = true;
-            } else {
+            } else if(array_key_exists('online', $data)) {
                 $data['presencial'] = false;
             }
             $this->alterarStatusAgendamento($data['agendamento_id'], $data['at_id']);
@@ -390,5 +508,34 @@ class AgendamentoController extends Controller
         $dias_semana = [1 => 'Segunda', 2 => 'Terça', 3 => 'Quarta', 4 => 'Quinta', 5 => 'Sexta', 6 => 'Sábado', 7 => 'Domingo'];
 
         return $dias_semana[$dia];
+    }
+
+    public function semanaPadraoSistema()
+    {
+
+        $dia = Carbon::now()->dayOfWeek; // Obtém o dia da semana atual (0 para domingo, 1 para segunda, etc.)
+
+        if ($dia == 0) {
+            // 0 para domingo, retorna 7
+            return 7;
+        } else if ($dia == 1) {
+            // 1 para segunda, retorna 1
+            return 1;
+        } else if ($dia == 2) {
+            // 2 para terça, retorna 2
+            return 2;
+        } else if ($dia == 3) {
+            // 3 para quarta, retorna 3
+            return 3;
+        } else if ($dia == 4) {
+            // 4 para quinta, retorna 4
+            return 4;
+        } else if ($dia == 5) {
+            // 5 para sexta, retorna 5
+            return 5;
+        } else if ($dia == 6) {
+            // 6 para sábado, retorna 6
+            return 6;
+        }
     }
 }

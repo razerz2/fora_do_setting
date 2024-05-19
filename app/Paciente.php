@@ -34,4 +34,10 @@ class Paciente extends Model
     {
         return $this->hasOne(PacienteEndereco::class, 'paciente_id');
     }
+
+    // Relacionamento com AgendamentoPaciente (um para muitos)
+    public function agendamentoPacientes()
+    {
+        return $this->hasMany(AgendamentoPaciente::class, 'paciente_id');
+    }
 }

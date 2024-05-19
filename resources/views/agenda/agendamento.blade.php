@@ -18,13 +18,22 @@
 
 @section('content')
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Agenda</h1>
+    <h1 class="h3 mb-2 text-gray-800">Agenda \ Semanal</h1>
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="text-center m-0 font-weight-bold text-secondary">Calendário de Agendamentos</h6>
+            <h6 class="text-center m-0 font-weight-bold text-secondary">Painel de Agendamentos</h6>
         </div>
         <div class="card-body">
+            <div class="row justify-content-between">
+                <div class="col md-4">
+                    <form action="{{ route('Agendamento.agendaPorDia') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-secondary btn-sm">Diária</button>
+                    </form>
+                </div>
+            </div>
+            <br>
             <div class="table-responsive">
                 <table class="table table-sm table-bordered" width="100%" cellspacing="0">
                     <tr class="table-dark">

@@ -42,9 +42,9 @@
                 </a>
                 <div id="collapseTwo0" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ route('Agendamento.agenda') }}">Calendário</a>
                         <a class="collapse-item" href="{{ route('Agendamento.create') }}">Criar Horário</a>
                         <a class="collapse-item" href="{{ route('Agendamento.index') }}">Agendamentos</a>
+                        <a class="collapse-item" href="{{ route('Agendamento.agenda') }}">Painel de Agendamentos</a>
                     </div>
                 </div>
             </li>
@@ -68,6 +68,24 @@
             </li>
         @endif
 
+        @if (in_array('sessoes', $permissoes))
+            <!-- Nav Item - Sessões -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo3"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-regular fa-address-card"></i>
+                    <span>Sessões</span>
+                </a>
+                <div id="collapseTwo3" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{{ route('Sessao.index') }}">Sessões</a>
+                        <a class="collapse-item" href="{{ route('SessaoPaciente.index') }}">Paciente Sessão</a>
+                        <a class="collapse-item" href="{{ route('ValidacaoAgendamento.index') }}">Validar</a>
+                    </div>
+                </div>
+            </li>
+        @endif
+
         @if (in_array('pagamentos', $permissoes))
             <!-- Nav Item - Pagamentos -->
             <li class="nav-item">
@@ -80,23 +98,6 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="">Lançar</a>
                         <a class="collapse-item" href="">Pagamentos</a>
-                    </div>
-                </div>
-            </li>
-        @endif
-
-        @if (in_array('sessoes', $permissoes))
-            <!-- Nav Item - Sessões -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo3"
-                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-regular fa-address-card"></i>
-                    <span>Sessões</span>
-                </a>
-                <div id="collapseTwo3" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="#">Sessões</a>
-                        <a class="collapse-item" href="#">Validar</a>
                     </div>
                 </div>
             </li>

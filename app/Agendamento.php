@@ -33,19 +33,19 @@ class Agendamento extends Model
     }
 
     /**
-     * Relação com endereço do paciente.
+     * Relação com agendamento do paciente.
      */
     public function agendamentoPaciente()
     {
-        return $this->hasOne(AgendamentoPaciente::class, 'agendamento_id');
+        return $this->hasOne(AgendamentoPaciente::class, 'agendamento_id', 'id_agendamento');
     }
 
     /**
-     * Relação com endereço do paciente.
+     * Relação com reservas de agendamentos.
      */
-    public function agendamenReservado()
+    public function agendamentoReservado()
     {
-        return $this->hasOne(AgendamentoReservado::class, 'agendamento_id');
+        return $this->hasOne(AgendamentoReservado::class, 'agendamento_id', 'id_agendamento');
     }
     
 }

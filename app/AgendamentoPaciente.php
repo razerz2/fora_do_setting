@@ -19,10 +19,18 @@ class AgendamentoPaciente extends Model
     protected $table = 'agendamento_paciente';
 
     /**
-     * Relação com o paciente.
+     * Relação com o agendamento.
      */
     public function agendamento()
     {
         return $this->belongsTo(Agendamento::class);
+    }
+
+    /**
+     * Relação com o paciente.
+     */
+    public function paciente()
+    {
+        return $this->belongsTo(Paciente::class, 'paciente_id', 'id_paciente');
     }
 }

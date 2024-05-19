@@ -81,12 +81,17 @@
                                 <div class="form-check">
                                     <input id="CheckPresencial" class="form-check-input" type="checkbox" name="presencial">
                                     <label class="form-check-label" for="CheckPresencial">
-                                        Presencial?
+                                        Presencial
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input id="CheckOnline" class="form-check-input" type="checkbox" name="online">
+                                    <label class="form-check-label" for="CheckPresencial">
+                                        Online
                                     </label>
                                 </div>
                             </div>                          
                         </div>
-
                     </div>
                     <!-- Card Body -->
                     <div class="card-footer">
@@ -105,4 +110,5 @@
             </div>
         </div>
     </div>
+    <script src="{{ asset('js/agendamento/create.js') }}"></script>
 @endsection

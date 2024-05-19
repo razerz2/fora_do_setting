@@ -11,8 +11,6 @@
 |
 */
 
-use App\Agendamento;
-
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -44,12 +42,25 @@ Route::middleware('auth')->group(function () {
   
     Route::resource('Agendamento', AgendamentoController::class)->except('agenda');
     Route::get('/Agendamentos/Calendario', 'AgendamentoController@agenda')->name('Agendamento.agenda');
+    Route::post('/Agendamentos/Calendario', 'AgendamentoController@agendaPorDia')->name('Agendamento.agendaPorDia');
     Route::post('/Agendamentos/Excluir/', 'AgendamentoController@agendamentoExcluir')->name('Agendamento.excluir');
     Route::post('/Agendamentos/Marcar/', 'AgendamentoController@agendamentoRedirecionador')->name('Agendamento.redirecionador');
     Route::post('/Agendamentos/Desmarcar/', 'AgendamentoController@agendamentoDesmarcar')->name('Agendamento.desmarcar');
+    Route::post('/Agendamentos/Reagendar/', 'AgendamentoController@reagendar')->name('Agendamento.reagendar');
     Route::post('/Agendamentos/StorePaciente/', 'AgendamentoController@storeAgendamentoPaciente')->name('Agendamento.storePaciente');
     Route::post('/Agendamentos/StoreReservado/', 'AgendamentoController@storeAgendamentoReservado')->name('Agendamento.storeReservado');
+    Route::post('/Agendamentos/StoreReagendarPaciente/', 'AgendamentoController@storeReagendarPaciente')->name('Agendamento.storeReagendarPaciente');
+    Route::post('/Agendamentos/StoreReagendarReserva/', 'AgendamentoController@storeReagendarReserva')->name('Agendamento.storeReagendarReserva');
     Route::get('getAgendamento/{id}', 'AgendamentoController@getAgendamento')->name('Agendamentos.getAgendamento');
+
+    Route::resource('ValidacaoAgendamento', ValidacaoAgendamentoController::class);
+    Route::post('/ValidacaoAgendamento/Validar/', 'ValidacaoAgendamentoController@validar')->name('ValidacaoAgendamento.validar');
+    Route::post('/ValidacaoAgendamento/Invalidar/', 'ValidacaoAgendamentoController@invalidar')->name('ValidacaoAgendamento.invalidar');
     
+    Route::resource('SessaoPaciente', SessaoPacienteController::class);
+    Route::post('/SessaoPaciente/Excluir/', 'SessaoPacienteController@Excluir')->name('SessaoPaciente.excluir');
+    Route::resource('Sessao', SessaoController::class);
+    Route::resource('SessaoCancelada', SessaoCanceladaController::class);
+
     // Adcionar mais rotas aqui, no decorrer do projeto...
 });

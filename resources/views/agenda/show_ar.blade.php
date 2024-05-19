@@ -62,9 +62,8 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="text06">Presencial:</label>
-                                <input type="text" class="form-control form-control-user" id="text06" value="{{ isset($agendamentosDetalhes[0]->presencial) ? "Sim" : "Não" }}"
-                                    aria-describedby="HorarioHelp" readonly>
+                                <label for="text06">Modalidade:</label>
+                                <input type="text" class="form-control form-control-user" id="text06" value="{{ $agendamentosDetalhes[0]->presencial ? 'Presencial' : 'Online' }}" aria-describedby="HorarioHelp" readonly>
                             </div>
                         </div>
                     </div>
