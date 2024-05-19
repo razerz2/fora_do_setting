@@ -74,14 +74,14 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input id="CheckPresencial" class="form-check-input" type="checkbox" name="presencial">
+                                    <input id="CheckPresencial" class="form-check-input" type="checkbox" name="presencial" checked>
                                     <label class="form-check-label" for="CheckPresencial">
                                         Presencial
                                     </label>
                                 </div>
                                 <div class="form-check">
                                     <input id="CheckOnline" class="form-check-input" type="checkbox" name="online">
-                                    <label class="form-check-label" for="CheckPresencial">
+                                    <label class="form-check-label" for="CheckOnline">
                                         Online
                                     </label>
                                 </div>

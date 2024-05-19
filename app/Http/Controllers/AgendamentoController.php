@@ -371,10 +371,9 @@ class AgendamentoController extends Controller
     {
         try {
             $data = $request->all();
+            $data['presencial'] = false;
             if (array_key_exists('presencial', $data)) {
                 $data['presencial'] = true;
-            } else if (array_key_exists('online', $data)) {
-                $data['presencial'] = false;
             }
             //dd($data);
             //Primeiro apaga registro antigo do agendamento na tabela Agendamento Paciente...
@@ -435,11 +434,9 @@ class AgendamentoController extends Controller
     {
         try {
             $data = $request->all();
-            
+            $data['presencial'] = false;
             if (array_key_exists('presencial', $data)) {
                 $data['presencial'] = true;
-            } else if(array_key_exists('online', $data)) {
-                $data['presencial'] = false;
             }
             $this->alterarStatusAgendamento($data['agendamento_id'], $data['at_id']);
             $recovery = AgendamentoPaciente::create($data);
@@ -462,10 +459,9 @@ class AgendamentoController extends Controller
         try {
             $data = $request->all();
             
+            $data['presencial'] = false;
             if (array_key_exists('presencial', $data)) {
                 $data['presencial'] = true;
-            } else if(array_key_exists('online', $data)) {
-                $data['presencial'] = false;
             }
             $this->alterarStatusAgendamento($data['agendamento_id'], $data['at_id']);
             $recovery = AgendamentoReservado::create($data);
