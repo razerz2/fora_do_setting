@@ -19,6 +19,13 @@
             <h6 class="text-center m-0 font-weight-bold text-secondary">Agendamentos</h6>
         </div>
         <div class="card-body">
+            <div class="row justify-content-between">
+                <div class="col md-10">
+                    <a href="{{ route('Agendamento.create') }}" class="btn btn-secondary btn-sm"> <i class="fa fa-plus"></i>
+                        Adicionar </a>
+                </div>
+            </div>
+            <br>
             <div class="table-responsive">
                 <table id="dataTable" class="table table-sm table-bordered" width="100%" cellspacing="0">
                     <thead>
