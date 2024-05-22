@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Agendamento;
+use App\Sessao;
+use App\SessaoCancelada;
 use App\ValidacaoAgendamento;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -16,26 +18,22 @@ class VerificarAgendamentosDiarios extends Command
     public function handle()
     {
         $diaDaSemana = $this->semanaPadraoSistema();
-        $diaHoje = now()->format('Y-m-d'); // Obtém a data de hoje
         $horarioAtual = now()->toTimeString(); // Obtém o horário atual
-
-        // Exclui os registros de validação feitos hoje
-        ValidacaoAgendamento::whereDate('data_registro', $diaHoje)->delete();
 
         $agendamentos = Agendamento::where('at_id', 1)->get();
         $registrosCriados = 0;
 
         foreach ($agendamentos as $agendamento) {
-            if ($agendamento->n_dia == $diaDaSemana) {
+            if ($agendamento->n_dia == $diaDaSemana && !$this->verificarRegistroVA($agendamento->id_agendamento) 
+                && !$this->verificarRegistroSessao($agendamento->id_agendamento) && !$this->verificarRegistroSC($agendamento->id_agendamento))
+            {
                 // Obtém o horário final do agendamento
                 $horarioFinalAgendamento = $agendamento->horario_final;
-                
+
                 // Verifica se o horário atual é maior que o horário final do agendamento
                 if ($horarioAtual > $horarioFinalAgendamento) {
                     ValidacaoAgendamento::create([
                         'agendamento_id' => $agendamento->id_agendamento,
-                        'vm_id' => 1,
-                        'status' => false,
                         'data_registro' => now(),
                     ]);
                     $registrosCriados++;
@@ -44,6 +42,7 @@ class VerificarAgendamentosDiarios extends Command
         }
 
         $this->info("Verificação diária de agendamentos concluída. $registrosCriados registros realizados.");
+        \Log::info("Verificação diária de agendamentos concluída. $registrosCriados registros realizados.");
     }
 
     public function semanaPadraoSistema()
@@ -72,6 +71,51 @@ class VerificarAgendamentosDiarios extends Command
         } else if ($dia == 6) {
             // 6 para sábado, retorna 6
             return 6;
+        }
+    }
+
+    public function verificarRegistroVA($agendamento_id)
+    {
+        $hoje = Carbon::today();
+
+        $registroExiste = ValidacaoAgendamento::where('agendamento_id', $agendamento_id)
+            ->whereDate('data_registro', $hoje)
+            ->exists();
+
+        if ($registroExiste) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function verificarRegistroSessao($agendamento_id)
+    {
+        $hoje = Carbon::today();
+
+        $registroExiste = Sessao::where('agendamento_id', $agendamento_id)
+            ->whereDate('data_sessao', $hoje)
+            ->exists();
+
+        if ($registroExiste) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function verificarRegistroSC($agendamento_id)
+    {
+        $hoje = Carbon::today();
+
+        $registroExiste = SessaoCancelada::where('agendamento_id', $agendamento_id)
+            ->whereDate('data_registro', $hoje)
+            ->exists();
+
+        if ($registroExiste) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

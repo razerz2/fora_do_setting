@@ -55,11 +55,13 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('ValidacaoAgendamento', ValidacaoAgendamentoController::class);
     Route::post('/ValidacaoAgendamento/Validar/', 'ValidacaoAgendamentoController@validar')->name('ValidacaoAgendamento.validar');
+    Route::post('/ValidacaoAgendamento/ValidarSelecionados/', 'ValidacaoAgendamentoController@validarSelecionados')->name('ValidacaoAgendamento.validarSelecionados');
     Route::post('/ValidacaoAgendamento/Invalidar/', 'ValidacaoAgendamentoController@invalidar')->name('ValidacaoAgendamento.invalidar');
     
     Route::resource('SessaoPaciente', SessaoPacienteController::class);
     Route::post('/SessaoPaciente/Excluir/', 'SessaoPacienteController@Excluir')->name('SessaoPaciente.excluir');
     Route::resource('Sessao', SessaoController::class);
+    Route::post('/Sessao/Excluir/', 'SessaoController@Excluir')->name('Sessao.excluir');
     Route::resource('SessaoCancelada', SessaoCanceladaController::class);
 
     // Adcionar mais rotas aqui, no decorrer do projeto...

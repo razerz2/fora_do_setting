@@ -344,7 +344,7 @@ class AgendamentoController extends Controller
 
             return redirect()->route('Agendamento.index');
         } catch (\Exception $e) {
-            \Log::error('Ocorreu um erro ao desmarcar o agendamento:: ' . $e->getMessage());
+            \Log::error('Ocorreu um erro ao desmarcar o agendamento: ' . $e->getMessage());
             return redirect()->route('Agendamento.index')->with('error', 'Ocorreu um erro ao desmarcar o agendamento: ' . $e->getMessage());
         }
     }

@@ -8,8 +8,6 @@ class ValidacaoAgendamento extends Model
 {
     protected $fillable = [
         'agendamento_id',
-        'vm_id',
-        'status',
         'data_registro'
     ];
 

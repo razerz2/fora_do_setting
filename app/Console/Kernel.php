@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('verificar:agendamentos')->dailyAt('23:59');
+        $schedule->command('verificar:agendamentos')->everyThirtyMinutes();
     }
 
     /**

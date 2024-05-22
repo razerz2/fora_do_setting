@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class SessaoCancelada extends Model
 {
     protected $fillable = [
+        'agendamento_id',
         'sp_id',
         'vm_id',
         'paciente_id',
+        'valor',
         'data_registro'
     ];
 

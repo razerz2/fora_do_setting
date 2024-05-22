@@ -18,49 +18,74 @@
         <div class="card-header py-3">
             <h6 class="text-center m-0 font-weight-bold text-secondary">Confirmar Atendimentos</h6>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table id="dataTable" class="table table-sm table-bordered" width="100%" cellspacing="0">
-                    <thead>
-                        <tr class="table-dark">
-                            <th style="width: 5%"> # </th>
-                            <th style="width: 8%"> Nº </th>
-                            <th> Paciente </th>
-                            <th> Dia da Semana </th>
-                            <th> Horário </th>
-                            <th> Data </th>
-                            <th>Opções</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($agendamentos as $agendamento)
-                            <tr class="text-center">
-                                <td class="text-center"><small>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="{{ $agendamento->id_agendamento }}" name="selected[]" id="check-{{ $agendamento->id_agendamento }}">                 
-                                </small></td>
-                                <td class="text-center"><small>{{ $agendamento->id_agendamento }}</small></td>
-                                <td class="text-center"><small>{{ $agendamento->nome_paciente }}</small></td>
-                                <td class="text-center"><small>{{ $agendamento->dia }}</small></td>
-                                <td class="text-center"><small>{{ substr($agendamento->horario_inicial, 0, 5) }} às
-                                        {{ substr($agendamento->horario_final, 0, 5) }}</small></td>
-                                <td class="text-center">
-                                    <small>{{ \Carbon\Carbon::parse($agendamento->data_registro)->format('d/m/Y') }}</small>
-                                </td>
-                                <td align="center">
-                                    <button data-toggle="modal" data-target="#validar" class="btn btn-secondary btn-sm"
-                                        onclick="validar_modal({{ $agendamento->id_agendamento }});">
-                                        <i class="fa fa-check-circle"></i> Valídar </button>
-                                    <button data-toggle="modal" data-target="#invalidar" class="btn btn-secondary btn-sm"
-                                        onclick="invalidar_modal({{ $agendamento->id_agendamento }});">
-                                        <i class="fa fa-ban"></i> Invalidar </button>
-                                </td>
+        <form id="formSeletedCheck" action="{{ route('ValidacaoAgendamento.validarSelecionados') }}" method="POST">
+            @csrf
+            <div class="card-body">
+                <div class="row justify-content-between">
+                    <div class="col md-10">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="toggleCheckboxes()"> <i class="fa fa-check-double"></i>
+                            Selecionar Todos </button>
+                    </div>
+                </div>
+                <br>
+                <div class="table-responsive">
+                    <table id="dataTable" class="table table-sm table-bordered" width="100%" cellspacing="0">
+                        <thead>
+                            <tr class="table-dark">
+                                <th style="width: 5%"> # </th>
+                                <th style="width: 8%"> Nº </th>
+                                <th> Paciente </th>
+                                <th> Dia da Semana </th>
+                                <th> Horário </th>
+                                <th> Data </th>
+                                <th>Opções</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($agendamentos as $agendamento)
+                                <tr class="text-center">
+                                    <td class="text-center"><small>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                    value="{{ $agendamento->id_va }}" name="selected[]"
+                                                    id="check-{{ $agendamento->id_agendamento }}">
+                                        </small></td>
+                                    <td class="text-center"><small>{{ $agendamento->id_agendamento }}</small></td>
+                                    <td class="text-center"><small>{{ $agendamento->nome_paciente }}</small></td>
+                                    <td class="text-center"><small>{{ $agendamento->dia }}</small></td>
+                                    <td class="text-center"><small>{{ substr($agendamento->horario_inicial, 0, 5) }} às
+                                            {{ substr($agendamento->horario_final, 0, 5) }}</small></td>
+                                    <td class="text-center">
+                                        <small>{{ \Carbon\Carbon::parse($agendamento->data_registro)->format('d/m/Y') }}</small>
+                                    </td>
+                                    <td align="center">
+                                        <button type="button" data-toggle="modal" data-target="#validar"
+                                            class="btn btn-secondary btn-sm"
+                                            onclick="validar_modal({{ $agendamento->id_va }});">
+                                            <i class="fa fa-check-circle"></i> Valídar </button>
+                                        <button type="button" data-toggle="modal" data-target="#invalidar"
+                                            class="btn btn-secondary btn-sm"
+                                            onclick="invalidar_modal({{ $agendamento->id_va }});">
+                                            <i class="fa fa-ban"></i> Invalidar </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+            <div class="card-footer">
+                <div class="row align-items-center justify-content-center text-center">
+                    <div class="col md-10">
+                        <a href="{{ route('home') }}" class="btn btn-secondary btn-sm"> <i class="fa fa-ban"></i>
+                            Cancelar </a>
+                        <button type="submit" class="btn btn-secondary btn-sm"> <i class="fa fa-check"></i>
+                            Validar Selecionados </button>
+                    </div>
+                </div>  
+            </div>
+        </form>
+
     </div>
     <!-- Modal validar -->
     <div class="modal modal-danger fade" id="validar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -77,8 +102,8 @@
                         <p class="text-center">
                             Tem certeza de que deseja validar o agendamento Nº "<span id="info_agendamento_v"></span>"?
                         </p>
-                        <input type="hidden" name="id_agendamento" id="id_agendamento_v" value="">
-                        
+                        <input type="hidden" name="id_va" id="id_agendamento_v" value="">
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -103,7 +128,7 @@
                         <p class="text-center">
                             Tem certeza de que deseja invalidar o agendamento Nº "<span id="info_agendamento_iv"></span>"?
                         </p>
-                        <input type="hidden" name="id_agendamento" id="id_agendamento_iv" value="">
+                        <input type="hidden" name="id_va" id="id_agendamento_iv" value="">
                         <div class="form-group text-center">
                             <label for="agendamento_periodo">Selecione o motivo da invalidade:</label>
                             <div class="row align-items-center justify-content-center text-center">
