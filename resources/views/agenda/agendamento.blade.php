@@ -29,7 +29,7 @@
                 <div class="col md-4">
                     <form action="{{ route('Agendamento.agendaPorDia') }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-secondary btn-sm">Diária</button>
+                        <button type="submit" class="btn btn-secondary btn-sm">Diário</button>
                     </form>
                 </div>
             </div>

@@ -16,13 +16,13 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="text-center m-0 font-weight-bold text-secondary">Sessões Registradas</h6>
+            <h6 class="text-center m-0 font-weight-bold text-secondary">Sessões Canceladas</h6>
         </div>
         <div class="card-body">
             <div class="row justify-content-between">
                 <div class="col md-10">
-                    <a class="btn btn-secondary btn-sm" href="{{ route('SessaoCancelada.index') }}"> <i class="fas fa-fw fa-regular fa-address-card"></i>
-                        Sessões Canceladas </a>
+                    <a class="btn btn-secondary btn-sm" href="{{ route('Sessao.index') }}"> <i class="fas fa-fw fa-regular fa-address-card"></i>
+                        Sessões </a>
                 </div>
             </div>
             <br>
@@ -36,27 +36,26 @@
                             <th> Dia da Semana </th>
                             <th> Horário </th>
                             <th> Data </th>
+                            <th> motivo </th>
                             <th>Opções</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($sessoes as $sessao)
                             <tr class="text-center">
-                                <td class="text-center"><small>{{ $sessao->id_sessao }}</small></td>
+                                <td class="text-center"><small>{{ $sessao->id_sc }}</small></td>
                                 <td class="text-center"><small>{{ $sessao->nome_paciente }}</small></td>
-                                <td class="text-center"><small><small>R$ {{ number_format($sessao->valor_sessao, 2, ',', '.') }}</small></td>
+                                <td class="text-center"><small><small>R$ {{ number_format($sessao->valor, 2, ',', '.') }}</small></td>
                                 <td class="text-center"><small>{{ $sessao->dia }}</small></td>
                                 <td class="text-center"><small>{{ substr($sessao->horario_inicial, 0, 5) }} às
                                         {{ substr($sessao->horario_final, 0, 5) }}</small></td>
                                 <td class="text-center">
                                     <small>{{ \Carbon\Carbon::parse($sessao->data_sessao)->format('d/m/Y') }}</small>
                                 </td>
+                                <td class="text-center"><small>{{ $sessao->nome_motivo }}</small></td>
                                 <td align="center">
-                                    <a href="{{ route('Sessao.show', ['sessao' => $sessao->id_sessao]) }}"
+                                    <a href="{{ route('SessaoCancelada.show', ['sessao' => $sessao->id_sc]) }}"
                                         class="btn btn-secondary btn-sm"> <i class="fa fa-eye"></i> Visualizar </a>
-                                    <button data-toggle="modal" data-target="#delete" class="btn btn-secondary btn-sm"
-                                        onclick="deletar_modal({{ $sessao->id_sessao }}, '{{ $sessao->nome_paciente }}');">
-                                        <i class="fa fa-trash"></i> Excluir </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -65,30 +64,4 @@
             </div>
         </div>
     </div>
-    <!-- Modal Excluír -->
-    <div class="modal modal-danger fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header align-items-center">
-                    <h4 class="modal-title text-center" id="myModalLabel">Deseja Excluír?</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                <form id="desativarForm" action="{{ route('Sessao.excluir') }}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <p class="text-center">
-                            Tem certeza de que deseja excluír sessao Nº "<span id="info-sessao-n"></span>" do Paciente: "<span id="info-sessao"></span>"?
-                        </p>
-                        <input type="hidden" name="id_sessao" id="id_sessao" value="">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-danger">Excluír</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <script src="{{ asset('js/sessao/index.js') }}"></script>
 @endsection

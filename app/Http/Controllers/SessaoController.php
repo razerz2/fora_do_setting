@@ -3,10 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Sessao;
+use App\Permissoes;
 use Illuminate\Http\Request;
 
 class SessaoController extends Controller
 {
+    
+     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        // Verifica a permissão de acesso antes de executar qualquer método do controller
+        $this->middleware(function ($request, $next) {
+            // Verifica se o usuário atual tem permissão para acessar a área
+            if (!Permissoes::verificarPermissao(auth()->user(), 'sessoes')) {
+                // Se o usuário não tiver permissão, redireciona para a página inicial com uma mensagem de erro
+                return redirect()->route('home')->with('error', 'Você não tem permissão para acessar a área solicitada.');
+            }
+
+            return $next($request);
+        });
+    }
+    
     /**
      * Display a listing of the resource.
      *
