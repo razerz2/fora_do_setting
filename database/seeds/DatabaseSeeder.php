@@ -1,5 +1,6 @@
 <?php
 
+use App\Genero;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -11,6 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(GeneroTableSeeder::class);
         $this->call(AdminTableSeeder::class);
         $this->call(PermissaoTableSeeder::class);
         $this->call(PaisesTableSeeder::class);

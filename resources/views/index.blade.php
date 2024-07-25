@@ -27,9 +27,9 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                                 Pacientes (Ativos)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">23</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $data['total_pacientes'] }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -45,9 +45,9 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                                 Nº Sessões (Mês Atual)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">55</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $data['total_sessoes'] }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-address-card fa-2x text-gray-300"></i>
@@ -63,9 +63,9 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                                 Valores Lançados (Mês Atual)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">R$ 8.985,63</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">R$ {{ number_format($data['total_valors'], 2, ',', '.') }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -81,9 +81,9 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                                 Validações Pendentes</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">16</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{  $data['total_validacoes'] }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-check-circle fa-2x text-gray-300"></i>
@@ -105,21 +105,7 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
+                    <h6 class="m-0 font-weight-bold text-dark">Ganhos no ultimos (6) meses</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
@@ -135,21 +121,8 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
+                    <h6 class="m-0 font-weight-bold text-dark">Sessões Ocorridas</h6>
+                    
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
@@ -158,13 +131,10 @@
                     </div>
                     <div class="mt-4 text-center small">
                         <span class="mr-2">
-                            <i class="fas fa-circle text-primary"></i> Direct
+                            <i class="fas fa-circle text-primary"></i> Sessões
                         </span>
                         <span class="mr-2">
-                            <i class="fas fa-circle text-success"></i> Social
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-info"></i> Referral
+                            <i class="fas fa-circle text-success"></i> Sessões Canceladas
                         </span>
                     </div>
                 </div>

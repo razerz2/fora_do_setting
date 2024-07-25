@@ -110,13 +110,15 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="exampleInputSexo">Sexo:</label>
-                                            <select id="exampleInputSexo" name="sexo"
+                                            <label for="exampleInputSexo">Genero:</label>
+                                            <select id="exampleInputSexo" name="genero_id"
                                                 class="form-control form-control-user" required>
-                                                <option value="F" {{ $paciente->sexo === 'F' ? 'selected' : '' }}>
-                                                    Feminino</option>
-                                                <option value="M" {{ $paciente->sexo === 'M' ? 'selected' : '' }}>
-                                                    Masculino</option>
+                                                @foreach ($generos as $genero)
+                                                    <option value="{{ $genero->id_genero }}"
+                                                        {{ old('genero_id', $paciente->genero_id) == $genero->id_genero ? 'selected' : '' }}>
+                                                        {{ $genero->nome_genero }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateValidacaoMotivoTable extends Migration
+class CreatePacientesGeneroTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateValidacaoMotivoTable extends Migration
      */
     public function up()
     {
-        Schema::create('validacao_motivo', function (Blueprint $table) {
-            $table->bigIncrements('id_vm');
-            $table->string('nome_motivo');
-            $table->string('descricao_motivo');
+        Schema::create('pacientes_genero', function (Blueprint $table) {
+            $table->bigIncrements('id_genero');
+            $table->string('nome_genero');
+            $table->string('abreviatura');
             $table->boolean('registro_sistemico');
         });
     }
@@ -28,6 +28,6 @@ class CreateValidacaoMotivoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('validacao_motivo');
+        Schema::dropIfExists('pacientes_genero');
     }
 }

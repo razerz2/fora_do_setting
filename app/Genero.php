@@ -4,17 +4,17 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ValidacaoMotivo extends Model
+class Genero extends Model
 {
     protected $fillable = [
-        'nome_motivo',
-        'descricao_motivo',
+        'nome_genero',
+        'abreviatura',
         'registro_sistemico'
     ];
 
     public $timestamps = false;
 
-    protected $primaryKey = 'id_vm';
+    protected $primaryKey = 'id_genero';
 
-    protected $table = 'validacao_motivo';
+    protected $table = 'pacientes_genero';
 }

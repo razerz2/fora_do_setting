@@ -88,7 +88,7 @@
                         <div class="row align-items-center justify-content-center">
                             <div class="col-md-5">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <div class="form-group">
                                             <label for="exampleInputDataNascimento">Nascimento:</label>
                                             <input type="date" class="form-control form-control-user"
@@ -106,13 +106,17 @@
                                                 aria-describedby="idadeHelp" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-5">
                                         <div class="form-group">
-                                            <label for="exampleInputSexo">Sexo:</label>
-                                            <select id="exampleInputSexo" name="sexo"
+                                            <label for="exampleInputSexo">Genero:</label>
+                                            <select id="exampleInputSexo" name="genero_id"
                                                 class="form-control form-control-user" required>
-                                                <option selected value="F">Feminino</option>
-                                                <option value="M">Masculino</option>
+                                                @foreach ($generos as $genero)
+                                                    <option value="{{ $genero->id_genero }}"
+                                                        {{ old('genero_id') == $genero->id_genero ? 'selected' : '' }}>
+                                                        <small>{{ $genero->nome_genero }}</small>
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>

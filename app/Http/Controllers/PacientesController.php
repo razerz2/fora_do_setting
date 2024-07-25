@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Permissoes;
 use App\Paciente;
+use App\Genero;
 use App\Inativacao;
 use App\MotivoInativacao;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class PacientesController extends Controller
@@ -51,7 +53,9 @@ class PacientesController extends Controller
      */
     public function create()
     {
-        return view('pacientes.create');
+        $generos = Genero::all();
+
+        return view('pacientes.create', compact('generos'));
     }
 
     /**
@@ -90,10 +94,9 @@ class PacientesController extends Controller
     public function show($id)
     {
         $paciente = Paciente::with('enderecoP.pais', 'enderecoP.estado', 'enderecoP.cidade')->find($id);
+        $genero = Genero::find($paciente->genero_id);
 
-        //dd($paciente);
-        
-        return view('pacientes.show', compact('paciente'));
+        return view('pacientes.show', compact('paciente', 'genero'));
     }
 
     /**
@@ -105,8 +108,9 @@ class PacientesController extends Controller
     public function edit($id)
     {
         $paciente = Paciente::find($id);
+        $generos = Genero::all();
         
-        return view('pacientes.edit', compact('paciente'));
+        return view('pacientes.edit', compact('paciente', 'generos'));
     }
 
     /**

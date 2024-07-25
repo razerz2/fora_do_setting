@@ -11,6 +11,10 @@
 |
 */
 
+use App\GastosPessoais;
+use App\GastosProfissionais;
+use App\Pagamentos;
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -64,5 +68,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/Sessao/Excluir/', 'SessaoController@Excluir')->name('Sessao.excluir');
     Route::resource('SessaoCancelada', SessaoCanceladaController::class);
 
+    // Rotas de pagamentos
+    Route::resource('Pagamentos', PagamentosController::class);
+    Route::post('/Pagamentos/Registrar_Pagamento/', 'PagamentosController@register')->name('Pagamentos.registrar');
+    Route::post('/Pagamentos/Excluir/', 'PagamentosController@Excluir')->name('Pagamentos.excluir');
+    Route::resource('Recibos', RecibosController::class);
+    // Rotas de Gastos Profissionais
+    Route::resource('GastosProfissionais', GastosProfissionaisController::class);
+    Route::post('/GastosProfissionais/Excluir/', 'GastosProfissionaisController@Excluir')->name('GastosProfissionais.excluir');
+    // Rotas de Gastos Pessoais 
+    Route::resource('GastosPessoais', GastosPessoaisController::class);
+    Route::post('/GastosPessoais/Excluir/', 'GastosPessoaisController@Excluir')->name('GastosPessoais.excluir');
     // Adcionar mais rotas aqui, no decorrer do projeto...
 });

@@ -1,21 +1,4 @@
-@php
-    function adicionarClasse($tipo_agendamento)
-    {
-        $color;
-        if ($tipo_agendamento == 1) {
-            $color = 'bg-secondary';
-        } elseif ($tipo_agendamento == 2) {
-            $color = 'bg-white';
-        } elseif ($tipo_agendamento == 3) {
-            $color = 'bg-light2';
-        }
-
-        return $color;
-    }
-@endphp
-
 @extends('layout')
-
 @section('content')
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800">Agenda \ Diária</h1>
@@ -71,7 +54,7 @@
                                 @else
                                     <ul>
                                         @foreach ($calendario[$periodo] as $agendamento)
-                                            <li class="p-3 text-dark small border border-secondary2 {{ adicionarClasse($agendamento->at_id) }}">
+                                            <li class="p-3 text-dark small border border-secondary2 bg-white">
                                                 
                                                 <p>Tipo:  {{ $agendamento->agendamentoTipo->tipo_agendamento }} </p><br>
                                                 @if ($agendamento->at_id == 1)

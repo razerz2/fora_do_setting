@@ -34,7 +34,7 @@ class PacienteRequest extends FormRequest
             'data_nascimento' => [
                 'required'
             ],
-            'sexo' => [
+            'genero_id' => [
                 'required'
             ],
             'email' => [

@@ -12,7 +12,7 @@ class Paciente extends Model
         'cpf',
         'data_nascimento',
         'idade',
-        'sexo',
+        'genero_id',
         'email',
         'telefone_1',
         'resp_tel_1',

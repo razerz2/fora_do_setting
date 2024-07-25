@@ -96,8 +96,8 @@
                 </a>
                 <div id="collapseTwo2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="">Lançar</a>
-                        <a class="collapse-item" href="">Pagamentos</a>
+                        <a class="collapse-item" href="{{ route('Pagamentos.create') }}">Lançar</a>
+                        <a class="collapse-item" href="{{ route('Pagamentos.index') }}">Pagamentos</a>
                     </div>
                 </div>
             </li>
@@ -113,8 +113,8 @@
                 </a>
                 <div id="collapseTwo4" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="#">Cadastar</a>
-                        <a class="collapse-item" href="#">Gastos Pessoais</a>
+                        <a class="collapse-item" href="{{ route('GastosPessoais.create') }}">Cadastar</a>
+                        <a class="collapse-item" href="{{ route('GastosPessoais.index') }}">Gastos Pessoais</a>
                     </div>
                 </div>
             </li>
@@ -130,8 +130,8 @@
                 </a>
                 <div id="collapseTwo5" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="">Cadastar</a>
-                        <a class="collapse-item" href="">Gastos Profissionais</a>
+                        <a class="collapse-item" href="{{ route('GastosProfissionais.create') }}">Cadastar</a>
+                        <a class="collapse-item" href="{{ route('GastosProfissionais.index') }}">Gastos Profissionais</a>
                     </div>
                 </div>
             </li>

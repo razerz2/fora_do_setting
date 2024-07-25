@@ -60,7 +60,7 @@
                         <div class="row align-items-center justify-content-center">
                             <div class="col-md-5">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <div class="form-group">
                                             <label for="exampleInputDataNascimento">Data de Nascimento:</label>
                                             <input type="date" class="form-control form-control-user"
@@ -77,12 +77,12 @@
                                                 aria-describedby="idadeHelp" disabled>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-5">
                                         <div class="form-group">
                                             <label for="exampleInputSexo">Sexo:</label>
                                             <select id="exampleInputSexo" name="sexo"
                                                 class="form-control form-control-user" disabled>
-                                                <option selected>{{ $paciente->sexo }}</option>
+                                                <option selected>{{ $genero->nome_genero }}</option>
                                             </select>
                                         </div>
                                     </div>
