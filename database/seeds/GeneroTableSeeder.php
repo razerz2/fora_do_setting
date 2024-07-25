@@ -28,6 +28,6 @@ class GeneroTableSeeder extends Seeder
         ];
 
         // Inserir os registros na tabela de permissões
-        DB::table('pacientes_generos')->insert($generos);
+        DB::table('pacientes_genero')->insert($generos);
     }
 }
