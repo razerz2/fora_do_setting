@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Permissoes;
 use App\Paciente;
-use App\Genero;
+use App\PacienteGenero;
 use App\Inativacao;
 use App\MotivoInativacao;
+use App\LogsUser;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class PacientesController extends Controller
@@ -42,8 +44,29 @@ class PacientesController extends Controller
      */
     public function index()
     {
-        $pacientes = Paciente::all();
-        return view('pacientes.index', compact('pacientes'));
+        // Lista pacientes com status 'ativo' e ordena pelo campo 'name' em ordem crescente
+        $pacientes = Paciente::where('status', 'ativo')->orderBy('nome_paciente', 'asc')->get();
+        $motivos = MotivoInativacao::all();
+
+        return view('pacientes.index', compact('pacientes', 'motivos'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexInativos()
+    {
+        // Lista pacientes inativos e inclui o motivo da inativação
+        $pacientes = Paciente::where('status', 'inativo')
+        ->with(['inativacao.motivoInativacao']) // Carrega o relacionamento
+        ->orderBy('nome_paciente', 'asc')
+        ->get();
+        
+        $motivos = MotivoInativacao::all();
+
+        return view('pacientes.index_inativos', compact('pacientes', 'motivos'));
     }
 
     /**
@@ -53,7 +76,7 @@ class PacientesController extends Controller
      */
     public function create()
     {
-        $generos = Genero::all();
+        $generos = PacienteGenero::all();
 
         return view('pacientes.create', compact('generos'));
     }
@@ -74,6 +97,7 @@ class PacientesController extends Controller
             $recovery = Paciente::create($data);
 
             $this->salvaImagemPerfil($image, $recovery->id_paciente);
+            $this->logRegister('Pacientes', 'store', $recovery);
     
             return redirect()->route('Pacientes.index');
 
@@ -94,7 +118,7 @@ class PacientesController extends Controller
     public function show($id)
     {
         $paciente = Paciente::with('enderecoP.pais', 'enderecoP.estado', 'enderecoP.cidade')->find($id);
-        $genero = Genero::find($paciente->genero_id);
+        $genero = PacienteGenero::find($paciente->genero_id);
 
         return view('pacientes.show', compact('paciente', 'genero'));
     }
@@ -108,7 +132,7 @@ class PacientesController extends Controller
     public function edit($id)
     {
         $paciente = Paciente::find($id);
-        $generos = Genero::all();
+        $generos = PacienteGenero::all();
         
         return view('pacientes.edit', compact('paciente', 'generos'));
     }
@@ -131,6 +155,8 @@ class PacientesController extends Controller
             // Atualize os dados do paciente
             $paciente->fill($data);
             $paciente->save();
+
+            $this->logRegister('Pacientes', 'update', $paciente);
     
             return redirect()->route('Pacientes.index');
         } catch (ModelNotFoundException $e) {
@@ -209,7 +235,9 @@ class PacientesController extends Controller
     
             // Crie um registro de inativação
             Inativacao::create($data);
-    
+            
+            $this->logRegister('Pacientes', 'disable', $paciente); 
+
             return redirect()->route('Pacientes.index');
         } catch (ModelNotFoundException $e) {
             // Se o paciente não for encontrado
@@ -219,15 +247,6 @@ class PacientesController extends Controller
             \Log::error('Ocorreu um erro ao desativar o paciente: ' . $e->getMessage());
             return redirect()->route('Pacientes.index')->with('error',  'Ocorreu um erro ao desativar o paciente, contate o suporte!');
         }
-    }
-
-    public function desativarView($id)
-    {
-
-        $paciente = Paciente::find($id);
-        $motivos = MotivoInativacao::all();
-
-        return view('pacientes.disable', compact('paciente', 'motivos'));
     }
 
     public function ativar(Request $request)
@@ -243,6 +262,8 @@ class PacientesController extends Controller
             $data['status'] = 'ativo';
             $paciente->fill($data);
             $paciente->save();
+
+            $this->logRegister('Pacientes', 'enable', $paciente);
     
             // Exclua o registro de inativação associado ao paciente
             Inativacao::where('paciente_id', $id)->delete();
@@ -256,6 +277,17 @@ class PacientesController extends Controller
             \Log::error('Ocorreu um erro ao ativar o paciente: ' . $e->getMessage());
             return redirect()->route('Pacientes.index')->with('error',  'Ocorreu um erro ao ativar o paciente, contate o suporte!');
         }
+    }
+
+    public function logRegister($route, $action, $content)
+    {
+        LogsUser::create([
+            'user_id' => Auth::id(),
+            'route' => $route,
+            'action' => $action,
+            'content' => json_encode($content), 
+            'data_registro' => now()
+        ]);
     }
 
 }

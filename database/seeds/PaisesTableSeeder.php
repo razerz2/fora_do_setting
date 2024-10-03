@@ -262,5 +262,8 @@ class PaisesTableSeeder extends Seeder
         ];
 
         DB::table('paises')->insert($data);
+
+        // Ajuste a sequência do PostgreSQL para que o próximo valor seja 247
+        DB::statement("SELECT setval(pg_get_serial_sequence('paises', 'id_pais'), 247, false)");
     }
 }

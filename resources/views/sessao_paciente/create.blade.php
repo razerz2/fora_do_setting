@@ -30,7 +30,7 @@
                             </ul>
                         @endif
                         <div class="row align-items-center justify-content-center">
-                            <div class="col-md-10">
+                            <div class="col-md-8">
                                 <div class="form-group">
                                     <label for="select_pacientes">Pacientes:</label>
                                     <select id="select_pacientes" name="paciente_id" class="form-control form-control-user"
@@ -44,6 +44,14 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input id="CheckRecibo" class="form-check-input" type="checkbox" name="recibo" checked>
+                                    <label class="form-check-label" for="CheckCheckRecibo">
+                                        Recibo
+                                    </label>
+                                </div>
+                            </div>     
                         </div>
 
                         <div class="row align-items-center justify-content-center">

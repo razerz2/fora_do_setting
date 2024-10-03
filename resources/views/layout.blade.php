@@ -21,7 +21,7 @@
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
 
     <!-- Custom styles for this page -->
-    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 
 </head>
 
@@ -79,49 +79,56 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
                                 <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">3+</span>
+                                @php
+                                    \Carbon\Carbon::setLocale('pt_BR');
+                                    $usuario = Auth::user();
+                                    $notificacoesNaoVerificadas = \App\Notificacao::NotificacoesNaoVerificadas(
+                                        $usuario->id,
+                                    );
+                                    $notificacoes = \App\Notificacao::listarNotificacoes($usuario->id);
+                                @endphp
+                                <span class="badge badge-danger badge-counter">{{ $notificacoesNaoVerificadas }}+</span>
                             </a>
                             <!-- Dropdown - Alerts -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown">
                                 <h6 class="dropdown-header">
-                                    Alerts Center
+                                    Notificações
                                 </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
+
+                                @forelse ($notificacoes as $notificacao)
+                                    <a class="dropdown-item d-flex align-items-center"
+                                        href="{{ route('Notificacao.show', ['notificacao' => $notificacao->id_notificacao]) }}">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-primary">
+                                                <i class="fas fa-exclamation-triangle text-white"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 12, 2019</div>
-                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-success">
-                                            <i class="fas fa-donate text-white"></i>
+                                        <div>
+                                            <div class="small text-gray-500">
+                                                {{ \Carbon\Carbon::parse($notificacao->data_registro)->translatedFormat('d \d\e F \d\e Y') }}
+                                            </div>
+                                            <span class="font-weight-bold multi-line-ellipsis">
+                                                {{ $notificacao->message }}
+                                            </span>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 7, 2019</div>
-                                        $290.29 has been deposited into your account!
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-warning">
-                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                    </a>
+                                @empty
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-secondary">
+                                                <i class="fas fa-bell-slash text-white"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 2, 2019</div>
-                                        Spending Alert: We've noticed unusually high spending for your account.
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All
-                                    Alerts</a>
+                                        <div>
+                                            <span class="font-weight-bold text-gray-500">Nenhuma notificação
+                                                disponível</span>
+                                        </div>
+                                    </a>
+                                @endforelse
+
+                                <a class="dropdown-item text-center small text-gray-500"
+                                    href="{{ route('Notificacao.index') }}"> Todas as Notificações</a>
                             </div>
                         </li>
 
@@ -134,12 +141,12 @@
                                 <span
                                     class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
                                 <img class="img-profile rounded-circle"
-                                    src="{{ asset('storage/images/ft' . Auth::id() . '.jpg') }}">
+                                    src="{{ asset('storage/images/users/ft' . Auth::id() . '.jpg') }}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ route('Perfil.visualizar') }}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Perfil
                                 </a>
@@ -148,11 +155,11 @@
                                         $permissoes = Auth::user()->permissao()->pluck('area_sistema')->toArray();
                                     @endphp
                                     @if (in_array('sistema', $permissoes))
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{{ route('Configuracoes.index') }}">
                                             <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                             Configurações
                                         </a>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{{ route('Logs.index') }}">
                                             <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                             Log de Atividades
                                         </a>
@@ -244,16 +251,12 @@
     <!-- Page level plugins -->
     <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="{{ asset('js/demo/chart-area-demo.js') }}"></script>
-    <script src="{{ asset('js/demo/chart-pie-demo.js') }}"></script>
-
     <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/datatables-demo.js"></script>
+    <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
 
 </body>
 

@@ -43,6 +43,9 @@ class EstadosTableSeeder extends Seeder
         ];
 
         DB::table('estados')->insert($data);
+
+        // Ajuste a sequência do PostgreSQL para que o próximo valor seja 28
+        DB::statement("SELECT setval(pg_get_serial_sequence('estados', 'id_estado'), 28, false)");
         
     }
 }

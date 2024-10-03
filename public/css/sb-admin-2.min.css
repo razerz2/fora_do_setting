@@ -12625,3 +12625,13 @@ body.sidebar-toggled footer.sticky-footer {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+
+.multi-line-ellipsis {
+    display: -webkit-box; /* Usado para o suporte a vários navegadores */
+    -webkit-line-clamp: 2; /* Limita a 2 linhas */
+    -webkit-box-orient: vertical; /* Orienta o conteúdo verticalmente */
+    overflow: hidden; /* Oculta o texto que excede o limite */
+    text-overflow: ellipsis; /* Adiciona '...' no final do texto cortado */
+    line-height: 1.5em; /* Ajuste de altura da linha, se necessário */
+    max-height: 3em; /* Altura máxima baseada na altura da linha (2 linhas * altura da linha) */
+  }

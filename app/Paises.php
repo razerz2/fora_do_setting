@@ -26,4 +26,9 @@ class Paises extends Model
     {
         return $this->hasMany(PacienteEndereco::class);
     }
+
+    public function estados()
+    {
+        return $this->hasMany(Estados::class, 'pais_id', 'id_pais');
+    }
 }

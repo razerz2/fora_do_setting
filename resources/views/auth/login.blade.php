@@ -100,16 +100,15 @@
         <div class="container-login100">
             <div class="wrap-login100">
                 <div class="login100-pic js-tilt" data-tilt>
-                    <img src="{{ asset('assets_login/images/img-01.png') }}" alt="IMG">
+                    <img src="{{ asset('storage/' . config('settings.login_logo')) }}" alt="IMG">
                 </div>
                 <form class="login100-form validate-form" method="POST" action="{{ route('login') }}">
                     @csrf
                     <!-- Error message -->
                     @if (session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show"  role="alert">
-                            <strong><i class="fa-solid fa-triangle-exclamation"></i> Atenção, </strong>
-                            {{ session('error') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                            <span class="ml-2"><small><strong>Atenção, </strong>{{ session('error')}}</small></span>
+                            <button type="button" class="close ml-auto" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>

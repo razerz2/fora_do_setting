@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Permissoes;
 use App\GastosProfissionais;
+use App\LogsUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class GastosProfissionaisController extends Controller
@@ -70,7 +72,8 @@ class GastosProfissionaisController extends Controller
             $recovery = GastosProfissionais::create($data);
 
             DB::commit();
-
+            
+            $this->logRegister('GastosProfissionais', 'store', $recovery);
             return redirect()->route('GastosProfissionais.index');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -130,7 +133,8 @@ class GastosProfissionaisController extends Controller
             $gasto->save();
 
             DB::commit();
-
+            
+            $this->logRegister('GastosProfissionais', 'update', $gasto);
             return redirect()->route('GastosProfissionais.index');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -159,10 +163,11 @@ class GastosProfissionaisController extends Controller
             $id_gpr = $request->id_gpr;
 
             // Remover a validação do agendamento
-            GastosProfissionais::where('id_gpr', $id_gpr)->delete();
+            $gasto = GastosProfissionais::where('id_gpr', $id_gpr)->delete();
 
             DB::commit();
-
+            
+            $this->logRegister('GastosProfissionais', 'destroy', $gasto);
             return redirect()->route('GastosProfissionais.index');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -200,4 +205,16 @@ class GastosProfissionaisController extends Controller
         // Converte para float
         return floatval($valor_limpo);
     }
+
+    public function logRegister($route, $action, $content)
+    {
+        LogsUser::create([
+            'user_id' => Auth::id(),
+            'route' => $route,
+            'action' => $action,
+            'content' => json_encode($content), 
+            'data_registro' => now()
+        ]);
+    }
+
 }

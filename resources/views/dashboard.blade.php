@@ -2,9 +2,9 @@
 <ul class="navbar-nav bg-gradient-light sidebar sidebar-light accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
         <div class="sidebar-brand-icon">
-            <img class="border-logo-main" src="{{ asset('css/img/logotipo/logo-main.png') }}" width="100%"
+            <img class="border-logo-main" src="{{ asset('storage/' . config('settings.system_logo')) }}" width="100%"
                 height="100%" />
         </div>
     </a>
@@ -14,7 +14,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="{{ route('home') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Menu</span></a>
     </li>
@@ -151,14 +151,14 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages1"
                     aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-regular fa-address-card"></i>
-                    <span>Sessão</span>
+                    <span>Sistema</span>
                 </a>
                 <div id="collapsePages1" class="collapse" aria-labelledby="headingPages"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="#">Relatório 1</a>
-                        <a class="collapse-item" href="#">Relatório 2</a>
-                        <a class="collapse-item" href="#">Relatório 3</a>
+                        <a class="collapse-item" href="{{ route('Relatorios.Pacientes') }}">Pacientes</a>
+                        <a class="collapse-item" href="{{ route('Relatorios.Agendamentos') }}">Agendamentos</a>
+                        <a class="collapse-item" href="{{ route('Relatorios.Pagamentos') }}">Pagamentos</a>
                     </div>
                 </div>
             </li>
@@ -172,9 +172,8 @@
                 <div id="collapsePages2" class="collapse" aria-labelledby="headingPages"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="#">Relatório 1</a>
-                        <a class="collapse-item" href="#">Relatório 2</a>
-                        <a class="collapse-item" href="#">Relatório 3</a>
+                        <a class="collapse-item" href="{{ route('Relatorios.GastosPessoais') }}">Gastos Pessoais</a>
+                        <a class="collapse-item" href="{{ route('Relatorios.GastosProfissionais') }}">Gastos Profissionais</a>
                     </div>
                 </div>
             </li>

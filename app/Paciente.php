@@ -40,4 +40,10 @@ class Paciente extends Model
     {
         return $this->hasMany(AgendamentoPaciente::class, 'paciente_id');
     }
+
+    // Relacionamento com Inativacao (um para um)
+    public function inativacao()
+    {
+        return $this->hasOne(Inativacao::class, 'paciente_id', 'id_paciente');
+    }
 }

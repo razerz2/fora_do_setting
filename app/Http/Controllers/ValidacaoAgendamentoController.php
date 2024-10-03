@@ -10,7 +10,9 @@ use App\SessaoPaciente;
 use App\SessaoCancelada;
 use App\ValidacaoAgendamento;
 use App\ValidacaoMotivo;
+use App\LogsUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ValidacaoAgendamentoController extends Controller
@@ -153,7 +155,8 @@ class ValidacaoAgendamentoController extends Controller
                 'sp_id' => $sessao_paciente['id_sp'],
                 'paciente_id' => $agendamento['paciente_id'],
                 'valor_sessao' => (float) $sessao_paciente['valor_sessao'],
-                'data_sessao' => $validacao->data_registro
+                'data_sessao' => $validacao->data_registro,
+                'pagamento' => false
             ];
 
             // Criar a nova sessão
@@ -161,9 +164,9 @@ class ValidacaoAgendamentoController extends Controller
 
             // Remover a validação do agendamento
             ValidacaoAgendamento::where('id_va', $id_va)->delete();
-
+            
+            $this->logRegister('ValidacaoAgendamento', 'validar', $recovery);
             return redirect()->route('ValidacaoAgendamento.index');
-
         } catch (ModelNotFoundException $e) {
             // Caso o agendamento não seja encontrado
             \Log::error('Agendamento não encontrado.: ' . $e->getMessage());
@@ -212,12 +215,15 @@ class ValidacaoAgendamentoController extends Controller
                         'sp_id' => $sessao_paciente['id_sp'],
                         'paciente_id' => $agendamento['paciente_id'],
                         'valor_sessao' => (float) $sessao_paciente['valor_sessao'],
-                        'data_sessao' => $validacao->data_registro
+                        'data_sessao' => $validacao->data_registro,
+                        'pagamento' => false
                     ];
 
-                    Sessao::create($dataSessao);
+                    $recovery = Sessao::create($dataSessao);
                     ValidacaoAgendamento::where('id_va', $id_va)->delete();
-
+                    
+                    $this->logRegister('ValidacaoAgendamento', 'validar', $recovery);
+                    
                 } catch (ModelNotFoundException $e) {
                     // Caso o agendamento não seja encontrado
                     \Log::error('Agendamento não encontrado.: ' . $e->getMessage());
@@ -228,7 +234,6 @@ class ValidacaoAgendamentoController extends Controller
                     return redirect()->route('ValidacaoAgendamento.index')->with('error', 'Ocorreu um erro durante a validação do agendamento com ID ' . $id_agendamento . ': ' . $e->getMessage());
                 }
             }
-
             return redirect()->route('ValidacaoAgendamento.index');
         } else {
             return redirect()->route('ValidacaoAgendamento.index')->with('error', 'Nenhum agendamento selecionado.');
@@ -284,7 +289,8 @@ class ValidacaoAgendamentoController extends Controller
 
             // Remover a validação do agendamento
             ValidacaoAgendamento::where('id_va', $id_va)->delete();
-
+            
+            $this->logRegister('ValidacaoAgendamento', 'invalidar', $recovery);
             return redirect()->route('ValidacaoAgendamento.index');
 
         } catch (ModelNotFoundException $e) {
@@ -296,5 +302,16 @@ class ValidacaoAgendamentoController extends Controller
             \Log::error('Ocorreu um erro durante a invalidação: ' . $e->getMessage());
             return redirect()->route('ValidacaoAgendamento.index')->with('error', 'Ocorreu um erro durante a invalidação: ' . $e->getMessage());
         }
+    }
+
+    public function logRegister($route, $action, $content)
+    {
+        LogsUser::create([
+            'user_id' => Auth::id(),
+            'route' => $route,
+            'action' => $action,
+            'content' => json_encode($content), 
+            'data_registro' => now()
+        ]);
     }
 }

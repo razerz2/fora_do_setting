@@ -6,7 +6,9 @@ use App\Paciente;
 use App\Sessao;
 use App\SessaoHistoricoReajuste;
 use App\SessaoPaciente;
+use App\LogsUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SessaoPacienteController extends Controller
 {
@@ -52,9 +54,16 @@ class SessaoPacienteController extends Controller
         $data = $request->all();
         $data['valor_sessao'] = $this->converterParaFloat($data['valor_sessao']);
         $data['data_registro'] = now();
-        
-        SessaoPaciente::create($data);
 
+        if (array_key_exists('recibo', $data)) {
+            $data['recibo'] = true;
+        }else{
+            $data['recibo'] = false;
+        }
+        
+        $recovery = SessaoPaciente::create($data);
+
+        $this->logRegister('SessaoPaciente', 'store', $recovery);
         return redirect()->route('SessaoPaciente.index');
     }
 
@@ -95,24 +104,31 @@ class SessaoPacienteController extends Controller
         $data = $request->all();
         $data['valor_sessao'] = $this->converterParaFloat($data['valor_sessao']);
         $this->storeHistoricoPaciente($data);
+        if (array_key_exists('recibo', $data)) {
+            $data['recibo'] = true;
+        }else{
+            $data['recibo'] = false;
+        }
         $sessao_paciente = SessaoPaciente::findOrFail($id);
         $sessao_paciente->fill($data);
         $sessao_paciente->save();
-
+        
+        $this->logRegister('SessaoPaciente', 'store', $sessao_paciente);
         return redirect()->route('SessaoPaciente.index');
     }
 
     public function storeHistoricoPaciente($data)
     {
-         $data_history['sp_id'] = $data['id_sp'];
-         $data_history['paciente_id'] = $data['paciente_id'];
-         $data_history['dia_vencimento'] = $data['dia_vencimento'];
-         $data_history['valor'] = $data['valor_sessao'];
-         $data_history['data_reajuste'] = now(); 
+        $data_history['sp_id'] = $data['id_sp'];
+        $data_history['paciente_id'] = $data['paciente_id'];
+        $data_history['dia_vencimento'] = $data['dia_vencimento'];
+        $data_history['valor'] = $data['valor_sessao'];
+        $data_history['data_reajuste'] = now();
 
-         SessaoHistoricoReajuste::create($data_history);
+        $recovery = SessaoHistoricoReajuste::create($data_history);
 
-        return true;        
+        $this->logRegister('HistoricoPaciente', 'store', $recovery);
+        return true;
     }
 
     /**
@@ -129,9 +145,11 @@ class SessaoPacienteController extends Controller
     public function excluir(Request $request)
     {
         $data = $request->all();
-        SessaoHistoricoReajuste::where('sp_id', $data['id_sp'])->delete();
-        SessaoPaciente::where('id_sp', $data['id_sp'])->delete();
+        $recovery_hr = SessaoHistoricoReajuste::where('sp_id', $data['id_sp'])->delete();
+        $recovery = SessaoPaciente::where('id_sp', $data['id_sp'])->delete();
 
+        $this->logRegister('HistoricoPaciente', 'destroy', $recovery_hr);
+        $this->logRegister('SessaoPaciente', 'destroy', $recovery);
         return redirect()->route('SessaoPaciente.index');
     }
 
@@ -149,4 +167,17 @@ class SessaoPacienteController extends Controller
         // Converte para float
         return floatval($valor_limpo);
     }
+    
+    public function logRegister($route, $action, $content)
+    {
+        LogsUser::create([
+            'user_id' => Auth::id(),
+            'route' => $route,
+            'action' => $action,
+            'content' => json_encode($content), 
+            'data_registro' => now()
+        ]);
+    }
+
+
 }

@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\VerificarAgendamentosDiarios',
+        'App\Console\Commands\VerificarGastosProfissionais',
+        'App\Console\Commands\VerificarGastosPessoais',
     ];
 
     /**
@@ -27,6 +29,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->command('verificar:agendamentos')->everyThirtyMinutes();
+        $schedule->command('gastos_profissionais:verificar')->daily();
+        $schedule->command('gastos_pessoais:verificar')->daily();
     }
 
     /**

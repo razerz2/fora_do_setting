@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Sessao;
 use App\Permissoes;
+use App\LogsUser;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class SessaoController extends Controller
@@ -125,8 +127,21 @@ class SessaoController extends Controller
         $id_sessao = $request->id_sessao;
 
         // Remover a validação do agendamento
-        Sessao::where('id_sessao', $id_sessao)->delete();
-
+        $sessao = Sessao::where('id_sessao', $id_sessao)->delete();
+        
+        $this->logRegister('Sessao', 'Destroy', $sessao);
         return redirect()->route('Sessao.index');
     }
+
+    public function logRegister($route, $action, $content)
+    {
+        LogsUser::create([
+            'user_id' => Auth::id(),
+            'route' => $route,
+            'action' => $action,
+            'content' => json_encode($content), 
+            'data_registro' => now()
+        ]);
+    }
+
 }

@@ -76,7 +76,7 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="exampleInputtime2">Valor da Despesa:</label>
+                                    <label for="exampleInputtime2">Valor:</label>
                                     <input type="text" class="form-control form-control-user" id="exampleInputtime2"
                                         value="R$ {{ number_format($gasto->valor_despesa, 2, ',', '.') }}"
                                         aria-describedby="ValorDespesaHelp" readonly>

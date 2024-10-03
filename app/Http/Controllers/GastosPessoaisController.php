@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Permissoes;
 use App\GastosPessoais;
+use App\LogsUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class GastosPessoaisController extends Controller
@@ -71,6 +73,7 @@ class GastosPessoaisController extends Controller
 
             DB::commit();
 
+            $this->logRegister('GastosPessoais', 'store', $recovery);
             return redirect()->route('GastosPessoais.index');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -131,6 +134,7 @@ class GastosPessoaisController extends Controller
 
             DB::commit();
 
+            $this->logRegister('GastosPessoais', 'update', $gasto);
             return redirect()->route('GastosPessoais.index');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -159,10 +163,11 @@ class GastosPessoaisController extends Controller
             $id_gpe = $request->id_gpe;
 
             // Remover a validação do agendamento
-            GastosPessoais::where('id_gpe', $id_gpe)->delete();
+            $gasto = GastosPessoais::where('id_gpe', $id_gpe)->delete();
 
             DB::commit();
 
+            $this->logRegister('GastosPessoais', 'destroy', $gasto);
             return redirect()->route('GastosPessoais.index');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -199,5 +204,16 @@ class GastosPessoaisController extends Controller
 
         // Converte para float
         return floatval($valor_limpo);
+    }
+
+    public function logRegister($route, $action, $content)
+    {
+        LogsUser::create([
+            'user_id' => Auth::id(),
+            'route' => $route,
+            'action' => $action,
+            'content' => json_encode($content), 
+            'data_registro' => now()
+        ]);
     }
 }

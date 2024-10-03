@@ -7,8 +7,10 @@ use App\Estados;
 use App\Cidades;
 use App\Paciente;
 use App\PacienteEndereco;
+use App\LogsUser;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PacientesEnderecoController extends Controller
@@ -48,8 +50,9 @@ class PacientesEnderecoController extends Controller
             $data = $request->all();
 
             // Crie o registro de endereço do paciente
-            PacienteEndereco::create($data);
+            $recovery = PacienteEndereco::create($data);
 
+            $this->logRegister('Pacientes', 'store', $recovery);
             return redirect()->route('Pacientes.index');
         } catch (Exception $e) {
             // Se ocorrer uma exceção ao criar o registro de endereço
@@ -101,7 +104,8 @@ class PacientesEnderecoController extends Controller
             // Atualize os dados do paciente
             $paciente->fill($data);
             $paciente->save();
-    
+            
+            $this->logRegister('Pacientes', 'update', $paciente);
             return redirect()->route('Pacientes.index');
         } catch (ModelNotFoundException $e) {
             // Se o paciente não for encontrado
@@ -123,8 +127,9 @@ class PacientesEnderecoController extends Controller
     {
         try {
             // Exclua o registro de endereço existente
-            PacienteEndereco::where('paciente_id', $id)->delete();
-
+            $pacientes = PacienteEndereco::where('paciente_id', $id)->delete();
+            
+            $this->logRegister('Pacientes', 'destroy', $pacientes);
             return redirect()->route('Pacientes.index');
         } catch (Exception $e) {
             // Se ocorrer uma exceção ao criar o registro de endereço
@@ -164,4 +169,16 @@ class PacientesEnderecoController extends Controller
         $cities = Cidades::where('estado_id', $state_id)->get();
         return response()->json($cities);
     }
+
+    public function logRegister($route, $action, $content)
+    {
+        LogsUser::create([
+            'user_id' => Auth::id(),
+            'route' => $route,
+            'action' => $action,
+            'content' => json_encode($content), 
+            'data_registro' => now()
+        ]);
+    }
+
 }

@@ -6,9 +6,11 @@ use App\Permissoes;
 use App\Pagamentos;
 use App\PagamentosSessoes;
 use App\Paciente;
+use App\Sessao;
 use App\SessaoPaciente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PagamentosController extends Controller
 {
@@ -173,6 +175,8 @@ class PagamentosController extends Controller
                     'sessao_id' => $sessao->id_sessao,
                     'valor' => $sessao->valor_sessao
                 ]);
+
+                $this->atualizarSessaoPagamento($sessao->id_sessao);
             }
 
             // Confirma a transação
@@ -393,5 +397,51 @@ class PagamentosController extends Controller
         $paciente = Paciente::find($id);
 
         return $paciente->nome_paciente;
+    }
+
+    public function atualizarSessaoPagamento($id_sessao)
+    {
+        // Encontrar a sessão pelo id_sessao
+        $sessao = Sessao::find($id_sessao);
+
+        // Verificar se a sessão foi encontrada
+        if ($sessao) {
+            // Atualizar o campo pagamento para true
+            $sessao->pagamento = true;
+
+            // Salvar as alterações
+            $sessao->save();
+
+            // informa uma resposta ou redirecionar
+            Log::info("Atualizar - Sessão Nº".$sessao->id." atualizado com sucesso!");
+            return true;
+        } else {
+            // Retornar uma resposta de erro se a sessão não for encontrada
+            Log::error("Atualizar - Sessão Nº".$sessao->id." não encontrada!");
+            return false;
+        }
+    }
+
+    public function estornarSessaoPagamento($id_sessao)
+    {
+        // Encontrar a sessão pelo id_sessao
+        $sessao = Sessao::find($id_sessao);
+
+        // Verificar se a sessão foi encontrada
+        if ($sessao) {
+            // Atualizar o campo pagamento para false
+            $sessao->pagamento = false;
+
+            // Salvar as alterações
+            $sessao->save();
+
+            // informa uma resposta ou redirecionar
+            Log::info("Estorno - Sessão Nº".$sessao->id." estornada com sucesso!");
+            return true;
+        } else {
+            // Retornar uma resposta de erro se a sessão não for encontrada
+            Log::error("Estorno - Sessão Nº".$sessao->id." não encontrada!");
+            return false;
+        }
     }
 }

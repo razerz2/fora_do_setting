@@ -69,7 +69,7 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="exampleInputtime2">Valor da Despesa:</label>
+                                    <label for="exampleInputtime2">Valor:</label>
                                     <input type="text" class="form-control form-control-user" id="exampleInputtime2"
                                         value="{{ old('valor_despesa') }}" name="valor_despesa"
                                         aria-describedby="ValorSessaoHelp" oninput="formatCurrency(this)">

@@ -204,7 +204,7 @@ class AgendamentoController extends Controller
         $periodos = [1 => 'Manhã', 2 => 'Tarde', 3 => 'Noite'];
 
         // Recuperar os agendamentos do banco de dados (supondo que você tenha o modelo Agendamento configurado corretamente)
-        $agendamentos = Agendamento::with('agendamentoPeriodo.agendamento', 'agendamentoTipo.agendamento', 'agendamentoPaciente.agendamento.')->get();
+        $agendamentos = Agendamento::with('agendamentoPeriodo', 'agendamentoTipo', 'agendamentoPaciente')->get();
         //dd($agendamentos);
         // Inicializar um array vazio para armazenar os agendamentos por dia e período
         $calendario = [];

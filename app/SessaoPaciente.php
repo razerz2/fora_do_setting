@@ -10,7 +10,8 @@ class SessaoPaciente extends Model
         'paciente_id',
         'dia_vencimento',
         'valor_sessao',
-        'data_registro'
+        'data_registro',
+        'recibo'
     ];
 
     public $timestamps = false;
@@ -18,4 +19,9 @@ class SessaoPaciente extends Model
     protected $primaryKey = 'id_sp';
 
     protected $table = 'sessao_paciente';
+
+    public function paciente()
+    {
+        return $this->belongsTo(Paciente::class, 'paciente_id', 'id_paciente');
+    }
 }

@@ -1,10 +1,12 @@
 @php
-    function formatarCPF($cpf) {
+    function formatarCPF($cpf)
+    {
         // Limpar o CPF removendo caracteres especiais
         $cpf = preg_replace('/[^0-9]/', '', $cpf);
 
         // Adicionar a máscara de CPF
-        $cpfFormatado = substr($cpf, 0, 3) . '.' . substr($cpf, 3, 3) . '.' . substr($cpf, 6, 3) . '-' . substr($cpf, 9, 2);
+        $cpfFormatado =
+            substr($cpf, 0, 3) . '.' . substr($cpf, 3, 3) . '.' . substr($cpf, 6, 3) . '-' . substr($cpf, 9, 2);
 
         return $cpfFormatado;
     }
@@ -31,10 +33,19 @@
             <h6 class="text-center m-0 font-weight-bold text-secondary">Pacientes Cadastrados</h6>
         </div>
         <div class="card-body">
-            <div class="row justify-content-between">
-                <div class="col md-10">
-                    <a href="{{ route('Pacientes.create') }}" class="btn btn-secondary btn-sm"> <i class="fa fa-plus"></i>
-                        Adicionar </a>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="d-flex">
+                        <!-- Botão à esquerda -->
+                        <a href="{{ route('Pacientes.create') }}" class="btn btn-secondary btn-sm">
+                            <i class="fa fa-plus"></i> Adicionar
+                        </a>
+            
+                        <!-- Botão à direita com ml-auto -->
+                        <a href="{{ route('Pacientes.inativos') }}" class="btn btn-secondary btn-sm ml-auto">
+                            <i class="fa fa-ban" aria-hidden="true"></i> Inativos
+                        </a>
+                    </div>
                 </div>
             </div>
             <br>
@@ -46,7 +57,6 @@
                             <th>Nome</th>
                             <th>CPF</th>
                             <th>Email</th>
-                            <th>Status</th>
                             <th>Opções</th>
                         </tr>
                     </thead>
@@ -57,7 +67,6 @@
                                 <td class="text-center"><small>{{ $paciente->nome_paciente }}</small></td>
                                 <td class="text-center"><small>{{ formatarCPF($paciente->cpf) }}</small></td>
                                 <td class="text-center"><small>{{ $paciente->email }}</small></td>
-                                <td class="text-center"><small>{{ $paciente->status }}</small></td>
                                 <td align="center">
                                     <a href="{{ route('Pacientes.verificaEnderecoPaciente', ['paciente' => $paciente->id_paciente]) }}"
                                         class="btn btn-secondary btn-sm"> <i class="fa fa-map"></i> Endereço </a>
@@ -65,16 +74,9 @@
                                         class="btn btn-secondary btn-sm"> <i class="fa fa-eye"></i> Visualizar </a>
                                     <a href="{{ route('Pacientes.edit', ['paciente' => $paciente->id_paciente]) }}"
                                         class="btn btn-secondary btn-sm"> <i class="fa fa-edit"></i> Editar </a>
-                                    @if ($paciente->status == 'ativo')
-                                        <button data-toggle="modal" data-target="#delete" class="btn btn-secondary btn-sm"
-                                            onclick="deletar_modal({{ $paciente->id_paciente }}, '{{ $paciente->nome_paciente }}');">
-                                            <i class="fa fa-trash"></i> Desativar </button>
-                                    @else
-                                        <button data-toggle="modal" data-target="#ativar" class="btn btn-secondary btn-sm"
-                                            onclick="ativar_modal({{ $paciente->id_paciente }}, '{{ $paciente->nome_paciente }}');">
-                                            <i class="fa fa-trash"></i> Ativar </button>
-                                    @endif
-
+                                    <button data-toggle="modal" data-target="#desativar" class="btn btn-secondary btn-sm"
+                                        onclick="desativar_modal({{ $paciente->id_paciente }}, '{{ $paciente->nome_paciente }}');">
+                                        <i class="fa fa-trash"></i> Desativar </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -84,7 +86,7 @@
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal modal-danger fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal modal-danger fade" id="desativar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header align-items-center">
@@ -92,41 +94,28 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <form id="desativarForm" action="" method="GET">
+                <form id="desativarForm" action="{{ route('Pacientes.desativar') }}" method="POST">
+                    @csrf
                     <div class="modal-body">
                         <p class="text-center">
                             Tem certeza de que deseja desativar "<span id="info-name"></span>"?
                         </p>
-                        <input type="hidden" name="id_paciente" id="id_usuario" value="">
+                        <input type="hidden" name="paciente_id" id="id_usuario" value="">
+                        <div class="col-md-20">
+                            <div class="form-group">
+                                <label for="exampleInputMotivoInativacao">Motivo da Inativação:</label>
+                                <select id="exampleInputMotivoInativacao" name="mi_id"
+                                    class="form-control form-control-user text-center" required>
+                                    @foreach ($motivos as $motivo)
+                                        <option value="{{ $motivo->id_mi }}">{{ $motivo->nome_mi }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-danger">Desativar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="modal modal-danger fade" id="ativar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header align-items-center">
-                    <h4 class="modal-title text-center" id="myModalLabel">Deseja ativar?</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                <form action="{{ route('Pacientes.ativar') }}" method="POST">
-                    {{ csrf_field() }}
-                    <div class="modal-body">
-                        <p class="text-center">
-                            Tem certeza de que deseja ativar "<span id="info-name-at"></span>"?
-                        </p>
-                        <input type="hidden" name="id_usuario" id="id_usuario_at" value="">
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Ativar</button>
                     </div>
                 </form>
             </div>

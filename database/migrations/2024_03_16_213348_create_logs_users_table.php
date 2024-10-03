@@ -16,7 +16,9 @@ class CreateLogsUsersTable extends Migration
         Schema::create('logs_users', function (Blueprint $table) {
             $table->bigIncrements('id_logs');
             $table->unsignedInteger('user_id');
-            $table->string('conteudo');
+            $table->string('route');
+            $table->string('action');
+            $table->string('content', 65535);
             $table->timestamp('data_registro');
             $table->foreign('user_id')->references('id')->on('users');
         });

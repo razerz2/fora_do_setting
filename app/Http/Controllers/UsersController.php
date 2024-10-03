@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Permissoes;
+use App\LogsUser;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -71,6 +73,7 @@ class UsersController extends Controller
 
         $this->salvaImagemPerfil($image, $recovery->id);
         $this->registraPermissoes($permissoes, $recovery->id);
+        $this->logRegister('Users', 'store', $recovery);
 
         return redirect()->route('Users.index');
         
@@ -125,6 +128,7 @@ class UsersController extends Controller
         $this->alterarImagemPerfil($image, $id);
         $this->deletePermissoes($id);
         $this->registraPermissoes($permissoes, $id);
+        $this->logRegister('Users', 'update', $usuario);
 
         return redirect()->route('Users.index');
 
@@ -175,6 +179,7 @@ class UsersController extends Controller
         $usuario->fill($data);
         $usuario->save();
 
+        $this->logRegister('Users', 'update_password', $usuario);
         return redirect()->route('Users.index');
     }
 
@@ -190,6 +195,7 @@ class UsersController extends Controller
         $usuario->fill($data);
         $usuario->save();
 
+        $this->logRegister('Users', 'disable', $usuario);
         return redirect()->route('Users.index');
     }
 
@@ -204,7 +210,8 @@ class UsersController extends Controller
         $data['status'] = 'ativo';
         $usuario->fill($data);
         $usuario->save();
-
+        
+        $this->logRegister('Users', 'enable', $usuario);
         return redirect()->route('Users.index');
     }
 
@@ -215,7 +222,7 @@ class UsersController extends Controller
 
             if ($image->isValid() && $image->getClientOriginalExtension()) {
                 $customName = 'ft'.$id_user.'.'. $image->getClientOriginalExtension();
-                $path = $image->storeAs('images', $customName, 'public');
+                $path = $image->storeAs('images/users/', $customName, 'public');
             }
             
         } else {
@@ -224,7 +231,7 @@ class UsersController extends Controller
             $customName = 'ft'. $id_user . '.jpg'; // Nome para a imagem padrão
 
             // Copie a imagem padrão para o sistema de armazenamento
-            Storage::disk('public')->put('images/' . $customName, file_get_contents($defaultImagePath));
+            Storage::disk('public')->put('images/users/' . $customName, file_get_contents($defaultImagePath));
 
     
             // Você pode salvar o caminho da imagem padrão no banco de dados se necessário
@@ -238,9 +245,9 @@ class UsersController extends Controller
             if ($image->isValid() && $image->getClientOriginalExtension()) {
 
                 $customName = 'ft'.$id_user.'.'.$image->getClientOriginalExtension();
-                $path = 'images/'.$customName;
+                $path = 'images/users/'.$customName;
                 Storage::disk('public')->delete($path);
-                $path = $image->storeAs('images', $customName, 'public');
+                $path = $image->storeAs('images/users/', $customName, 'public');
 
             }
             
@@ -282,4 +289,16 @@ class UsersController extends Controller
         
         return true;
     }
+
+    public function logRegister($route, $action, $content)
+    {
+        LogsUser::create([
+            'user_id' => Auth::id(),
+            'route' => $route,
+            'action' => $action,
+            'content' => json_encode($content), 
+            'data_registro' => now()
+        ]);
+    }
+
 }

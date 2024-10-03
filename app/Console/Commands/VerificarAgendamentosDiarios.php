@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Agendamento;
 use App\Sessao;
 use App\SessaoCancelada;
+use App\User;
+use App\Notificacao;
 use App\ValidacaoAgendamento;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -42,6 +44,7 @@ class VerificarAgendamentosDiarios extends Command
         }
 
         $this->info("Verificação diária de agendamentos concluída. $registrosCriados registros realizados.");
+        $this->registrarNotificacao("Verificação diária de agendamentos concluída. $registrosCriados registros realizados.");
         \Log::info("Verificação diária de agendamentos concluída. $registrosCriados registros realizados.");
     }
 
@@ -116,6 +119,21 @@ class VerificarAgendamentosDiarios extends Command
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function registrarNotificacao($message)
+    {
+        $users = User::where('status', 'ativo')->get();
+
+        foreach ($users as $user) {
+            Notificacao::create([
+                'user_id' => $user->id,
+                'route' => 'Agendamento',
+                'data_vencimento' => $message,
+                'data_registro' => now(), // Data de hoje
+                'verificado' => false
+            ]);
         }
     }
 }

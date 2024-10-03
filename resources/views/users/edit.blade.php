@@ -34,7 +34,7 @@
                                     <label for="exampleInputImagem">Foto de Perfil:</label>
                                     <div class="text-center">
                                         <div id="imageContainer" class="rounded" style="width: 150px; height: 150px;">
-                                            <img id="exampleInputImagem" src="{{ asset('storage/images/ft' . $usuario->id . '.jpg') }}"
+                                            <img id="exampleInputImagem" src="{{ asset('storage/images/users/ft' . $usuario->id . '.jpg') }}"
                                                 style="width: 150px; height: 150px;">
                                         </div>
                                     </div>

@@ -36,4 +36,11 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    protected function sendFailedLoginResponse(\Illuminate\Http\Request $request)
+    {
+        return redirect()->back()
+            ->withInput($request->only($this->username(), 'remember'))
+            ->with('error', 'Usuário ou senha incorretos!');
+    }
 }

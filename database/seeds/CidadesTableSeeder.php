@@ -9730,5 +9730,8 @@ class CidadesTableSeeder extends Seeder
         ];
 
         DB::table('cidades')->insert($data);
+
+        // Ajuste a sequência do PostgreSQL para que o próximo valor seja 9715
+        DB::statement("SELECT setval(pg_get_serial_sequence('cidades', 'id_cidade'), 9715, false)");
     }
 }

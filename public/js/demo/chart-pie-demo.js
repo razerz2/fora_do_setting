@@ -9,7 +9,7 @@ var myPieChart = new Chart(ctx, {
   data: {
     labels: ["Sessões", "Sessões Canceladas"],
     datasets: [{
-      data: [55, 30],
+      data: [chartData.sessoes, chartData.sessoes_canceladas],
       backgroundColor: ['#4e73df', '#1cc88a'],
       hoverBackgroundColor: ['#2e59d9', '#17a673'],
       hoverBorderColor: "rgba(234, 236, 244, 1)",

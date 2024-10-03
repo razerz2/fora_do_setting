@@ -19,6 +19,7 @@ class CreateSessaoPacienteTable extends Migration
             $table->integer('dia_vencimento');
             $table->float('valor_sessao');
             $table->timestamp('data_registro');
+            $table->boolean('recibo');
             $table->foreign('paciente_id')->references('id_paciente')->on('pacientes');
         });
     }

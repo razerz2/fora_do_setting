@@ -24,4 +24,14 @@ class Estados extends Model
     {
         return $this->hasMany(PacienteEndereco::class);
     }
+
+    public function pais()
+    {
+        return $this->belongsTo(Paises::class, 'pais_id', 'id_pais'); // 'pais_id' é a chave estrangeira em 'estados'
+    }
+
+    public function cidades()
+    {
+        return $this->hasMany(Cidades::class, 'cidade_id', 'id_cidade');
+    }
 }

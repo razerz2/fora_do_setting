@@ -20,6 +20,7 @@ class CreateSessaoTable extends Migration
             $table->unsignedInteger('paciente_id');
             $table->float('valor_sessao');
             $table->timestamp('data_sessao');
+            $table->boolean('pagamento');
             $table->foreign('agendamento_id')->references('id_agendamento')->on('agendamento');
             $table->foreign('sp_id')->references('id_sp')->on('sessao_paciente');
             $table->foreign('paciente_id')->references('id_paciente')->on('pacientes');
